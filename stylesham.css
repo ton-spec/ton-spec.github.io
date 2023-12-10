@@ -1,0 +1,292 @@
+/* Reset CSS */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #FDD7E4;
+  overflow-x: hidden;
+}
+
+/* Header */
+header {
+  background-color: #808000;
+  color: #ddd;
+  padding: 20px;
+  border-bottom: 1px solid #FF8E7;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Header content */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+
+/* CSS for Subscription Bar */
+.subscribe-bar {
+  background-color: #f0f0f0;
+  padding: 20px;
+  text-align: center;
+}
+
+.subscribe-bar form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subscribe-bar input[type="email"] {
+  padding: 8px;
+  border: 2px solid #000000;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.subscribe-bar button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4169E1;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+/* Hamburger Icon */
+.hamburger-icon {
+  color: #4169E1;
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: absolute;
+  left: 350px; /* Adjust the right position to create space from the right edge */
+  top: 50%; /* Position vertically at the center of the header */
+  transform: translateY(-50%); /* Center it vertically using transform */
+}
+
+
+
+
+
+.hamburger-icon span {
+  display: block;
+  width: 100%;
+  height: 2px; /* Increase thickness by adjusting the height */
+  background-color: #000000;
+  margin: 2px 0; /* Adjust spacing between lines */
+  transition: 0.4s;
+  
+}
+
+
+
+
+
+/* Top Articles */
+.top-articles {
+  width: 30%;
+  padding: 20px;
+  background-color: #f0f0f0;
+  box-sizing: border-box;
+  margin-bottom: 20px; /* Add margin between top articles and main articles */
+}
+
+/* Main Articles */
+.main-articles {
+  color: #ddd; 
+  width: 70%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #000000;
+  box-sizing: border-box;
+  margin-bottom: 20px; /* Add margin between main articles and footer */
+}
+
+/* Ensure images fit properly */
+.main-articles img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #00008B;
+  color: #ddd;
+  height: 100px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.social-links a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #ddd;
+  font-weight: bold;
+}
+
+.social-links a:hover {
+  color: #4169E1;
+}
+
+/* Search Container */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #ddd;
+  border: 4px solid #000;
+  padding: 4px;
+}
+
+.search-container input[type="text"] {
+  flex: 0 1 auto; /* Adjust the flex value to change the length of the input */
+  border: none;
+  padding: 8px;
+  width: 100px; /* Optional: Set a specific width */
+}
+
+
+.search-icon {
+  position: absolute;
+  right: 8px;
+  color: #39ff14;
+  text-decoration: none;
+}
+
+/* Initially hide the nav links */
+
+
+/* Initially hide the nav links */
+.nav-icons {
+  display: none;
+  position: fixed;
+  top: 100px; /* Adjust this value according to your header height */
+  left: 0;
+  background: #808000;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Show the nav links when the .show class is applied */
+
+
+
+/* Show the nav links when the .show class is applied */
+.nav-icons.show {
+  display: block; /* or flex, or any other appropriate display value */
+}
+h1{
+   
+  margin-right: 20px; 
+
+}
+
+.logo-container img {
+  width: 100px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+  position: absolute;
+  top: 10px; /* Adjust top position */
+  left: 10px; /* Adjust left position */
+  z-index: -1;
+  }
+  
+  
+/* Media Slider */
+.media-slider {
+  overflow: hidden;
+  width: 35%;
+  height: 100px; /* Adjust the height to your preference */
+  margin-bottom: 20px;
+}
+
+
+
+
+.media-slide {
+  display: flex;
+  animation: slide 10s linear infinite; /* Adjust duration and timing function */
+}
+
+@media-slide img {
+  width: 100%; /* Ensure media fills the container */
+  height: auto;
+}
+
+/* Animation */
+@keyframes slide {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%); /* Adjust the direction of the slide */
+  }
+}
+.top-articles article,
+.main-articles article {
+  margin-bottom: 20px; /* Add margin between each article */
+}
+
+
+.top-articles article,
+.main-articles article {
+  margin-bottom: 20px; /* Add margin between each article */
+}
+
+
+/* Navigation links styles */
+.nav-links {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #ddd;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #4169e1;
