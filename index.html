@@ -1,151 +1,119 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Online Learning Platform</title>
-  <!-- Include CSS stylesheets -->
-  <link rel="stylesheet" href="styles.css">
-  <style>
-   /* Basic CSS reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Style for the header */
-header {
-  background-color: #333;
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Style for the logo */
-.logo img {
-  height: 40px; /* Adjust height as needed */
-  margin-right: 10px;
-}
-
-
-.search-bar { display: flex; 
-           align-items: center; }
-            .search-bar input[type="text"] { width: 120px;
-             /* Adjust the width as needed */ padding: 8px;
-              border-radius: 5px; 
-              border: 1px solid #ccc;
-               margin-right: 10px; 
-               } 
-               .search-bar button { background-color:             #ffc107;
-                color: white;
-                 border: none; 
-                 padding: 8px 12px; 
-                 border-radius: 5px; 
-                 cursor: pointer; }
-
-
-
-
-
-/* Style for the navigation menu */
-nav ul {
-  list-style-type: none;
-  display: flex;
-}
-
-nav ul li {
-  margin-right: 20px;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-nav ul li a:hover {
-  color: #ffc107; /* Change color on hover */
-}
-
-/* Media query for mobile devices */
-@media (max-width: 768px) {
-  header {
-    padding: 10px;
-    flex-direction: column-reverse;
-    align-items: flex-start;
-  }
-
-  .logo img {
-    margin-bottom: 10px;
-  }
-
-  nav ul {
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-  }
-
-  nav ul li {
-    margin-right: 10px;
-    margin-bottom: 0;
-  }
-}
-
-
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="stylesham.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Tonny Mulati Digital</title>
 </head>
 <body>
-  <header>
-  <div class="logo">
-    <img src="logo.png" alt="Online Learning Platform Logo">
-    <h1>Online Learning Platform</h1>
-  </div>
+<!-- ... (Previous HTML code) ... -->
 
-  <nav>
+<header>
+  <div class="header-content">
+    <div class="logo-container">
+      <img src=" https://source.unsplash.com/random/1920x1080/ " alt="Logo">
+    </div>
+    <h1>Tonblog</h1>
+    <div class="search-container">
+      <input type="text" placeholder="Search...">
+      <a href="#" class="search-icon">&#128269;</a>
+    </div>
+    <div class="hamburger-icon" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav id="main-nav" class="nav-icons hide">
     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Courses</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="#">World</a></li>
+      <li><a href="#">Politics</a></li>
+      <li><a href="#">Business</a></li>
+      <li><a href="about.html">About Me</a></li>
+      <li><a href="blog.html">Blog</a></li>
     </ul>
   </nav>
-
-  <div class="search-bar">
-    <input type="text" placeholder="Search...">
-    <button><img src="search-icon.png" alt="Search"></button>
-  </div>
-
-  <div class="user-actions">
-    <a href="#">Login</a>
-    <a href="#">Sign Up</a>
-  </div>
 </header>
 
+<section class="subscribe-bar"> <form action="#"> <input type="email" placeholder="Enter your email"> <button type="submit">Subscribe</button> </form> </section>
 
-  <main>
-    <section class="course">
-      <h2>Course Title</h2>
-      <p>Description of the course...</p>
-      <div class="course-materials">
-        <!-- Display course materials -->
-        <h3>Course Materials</h3>
-        <ul>
-          <li><a href="#">Lesson 1: Introduction</a></li>
-          <li><a href="#">Lesson 2: Topic 1</a></li>
-          <!-- Add more lessons here -->
-        </ul>
-      </div>
-      <!-- Add features like discussion forums, quizzes, etc. -->
-    </section>
-  </main>
+<div class="media-slider">
+  <div class="media-slide">
+    <!-- Your media content: images, videos, etc. -->
+    <img src="https://source.unsplash.com/user/c_v_r/1900x800 " alt="Image 1">
+    
+   
+   <img
+   src= https://source.unsplash.com/random/1920x1080/
+  
+  alt="Image 2">  <!-- Add more media content here -->
+  
+  </div>
+</div>
+
+
+
+
+<main>
+  <aside class="top-articles">
+    <!-- Top Articles content -->
+    <h2>Top Articles</h2>
+    <article>
+    
+    
+    
+      <h3>How to Bake Cakes</h3>
+      <p>Cooking cakes can be a  quite interesting  venture if you have what it takes to make them...</p>
+ 
+    <article>
+      <h3>Education News</h3>
+      <p>Education is the key to success. The fact succeeding in life is....</p>
+    </article>
+    <!-- Add more top articles here -->
+  </aside>
+
+  <section class="main-articles">
+    <!-- Main Articles content -->
+    <article>
+      <img src="https://source.unsplash.com/user/c_v_r/1900x800" alt="Main Article Image">
+      <h2>Tonny speaks</h2>
+      <p>My name is Tonny Mulati. Am developing this project as a way of consolidating my programming skills. Am interested in web development...</p>
+    </article>
+    <article>
+      <img src="https://source.unsplash.com/random/1920x1080/" alt="Article Image">
+      <h2>Nzoia Sugar</h2>
+      <p>Founded in Bungoma county, this company grew in leaps and bounds..</p>
+    </article>
+    <article>
+      <img src="https://source.unsplash.com/user/c_v_r/1900x800" alt="Article Image">
+      <h2>Maximizing Opportunities</h2>
+      <p>opportunities are available for each of the...</p>
+    </article>
+  </section>
+</main>
+
 
   <footer>
-    <!-- Footer content -->
-    <p>&copy; 2023 Online Learning Platform</p>
+    <!-- Social links -->
+    <div class="social-links">
+      <a href="https://www.facebook.com/YourFacebookPage" target="_blank"><i class="fab fa-facebook-square"></i></a>
+      <a href="https://www.instagram.com/YourInstagramPage" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://twitter.com/YourTwitterPage" target="_blank"><i class="fab fa-twitter"></i></a> 
+      <a href="https://www.linkedin.com/in/YourLinkedInProfile" target="_blank"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <p>&copy; 2023 Tonny Mulati Digital. All rights reserved.</p>
   </footer>
 
-  <!-- Include JavaScript files -->
-  <script src="scripts.js"></script>
+  <script>
+ function toggleMenu() {
+  const icons = document.querySelector('.nav-icons');
+  icons.classList.toggle('show');
+}
+
+  </script>
 </body>
 </html>
+ 
