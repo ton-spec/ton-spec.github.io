@@ -7,19 +7,26 @@ body {
   font-family: Arial, sans-serif;
   background-color: #FDD7E4;
   overflow-x: hidden;
+  padding-top: 0px;
+  padding-left: 0px;
 }
 
 /* Header */
 header {
+  position: relative;
   background-color: #808000;
   color: #ddd;
   padding: 20px;
   border-bottom: 1px solid #FF8E7;
   height: 100px;
+  width: ;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+  
+  }
+
+
 
 /* Header content */
 .header-content {
@@ -78,7 +85,7 @@ header {
   flex-direction: column;
   justify-content: space-around;
   position: absolute;
-  left: 350px; /* Adjust the right position to create space from the right edge */
+  right: 0; /* Adjust the right position to create space from the right edge */
   top: 50%; /* Position vertically at the center of the header */
   transform: translateY(-50%); /* Center it vertically using transform */
 }
@@ -98,31 +105,106 @@ header {
 }
 
 
+/* Your default styles for search container, input, and hamburger icon */
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    /* Styles for smaller screens */
+    .search-container {
+        /* Adjusted styles for search container */
+        /* Example: You might want to change the positioning or width */
+        left: 20%;
+    }
+
+    .search-container input[type="text"] {
+        /* Adjusted styles for input in smaller screens */
+        /* Example: You might want to change the width or padding */
+    }
+
+    .search-icon {
+        /* Adjusted styles for search icon */
+        /* Example: You might want to change the positioning or color */
+        left: 20;
+        
+    }
+
+    .hamburger-icon {
+    
+    right: 0; /* Adjust the left position to create space from the left edge */
+        /* Adjusted styles for hamburger icon */
+        /* Example: You might want to change the positioning or color */
+    }
+
+    .hamburger-icon span {
+        /* Adjusted styles for hamburger icon lines */
+        /* Example: You might want to change the height or spacing */
+    }
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    /* Styles for smaller screens */
+    
+
+    .search-icon {
+        /* Adjusted styles for search icon */
+        /* Example: You might want to change the positioning or color */
+        left: 20;
+        
+    }
+
+    .hamburger-icon {
+    
+    right: 0; /* Adjust the left position to create space from the left edge */
+        /* Adjusted styles for hamburger icon */
+        /* Example: You might want to change the positioning or color */
+    }
+
+    .hamburger-icon span {
+        /* Adjusted styles for hamburger icon lines */
+        /* Example: You might want to change the height or spacing */
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
 /* Top Articles */
 .top-articles {
-  width: 30%;
+  width: 45%;
   padding: 20px;
-  background-color: #f0f0f0;
+  border: 2px solid #fff;
+  background-color: none;
   box-sizing: border-box;
   margin-bottom: 20px; /* Add margin between top articles and main articles */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Main Articles */
 .main-articles {
   color: #ddd; 
-  width: 70%;
+  width: 55%;
   padding: 20px;
-  border: 1px solid #ccc;
-  background-color: #000000;
+  border: 2px solid #fff;
+  background-color: none;
   box-sizing: border-box;
-  margin-bottom: 20px; /* Add margin between main articles and footer */
+  margin-bottom: 20px; /* Add margin between main
+   articles and footer */
+  display: flex; 
+  flex-direction: column;
+  
 }
 
 /* Ensure images fit properly */
-.main-articles img {
+.main-articles img,  .top-articles img {
   max-width: 100%;
   height: auto;
   display: block;
@@ -133,17 +215,7 @@ main {
   flex-wrap: wrap;
 }
 
-/* Footer */
-footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #00008B;
-  color: #ddd;
-  height: 100px;
-  flex-shrink: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+
 
 /* Social Links */
 .social-links {
@@ -170,6 +242,7 @@ footer {
   align-items: center;
   background-color: #ddd;
   border: 4px solid #000;
+  border-radius: 10px;
   padding: 4px;
 }
 
@@ -178,6 +251,7 @@ footer {
   border: none;
   padding: 8px;
   width: 100px; /* Optional: Set a specific width */
+  border-radius: 10px;
 }
 
 
@@ -188,7 +262,6 @@ footer {
   text-decoration: none;
 }
 
-/* Initially hide the nav links */
 
 
 /* Initially hide the nav links */
@@ -197,9 +270,10 @@ footer {
   position: fixed;
   top: 100px; /* Adjust this value according to your header height */
   left: 0;
-  background: #808000;
+  background-color: rgba(255, 255, 255, 0.5);
   width: 100%;
   padding: 20px;
+ 
 }
 
 /* Show the nav links when the .show class is applied */
@@ -210,6 +284,15 @@ footer {
 .nav-icons.show {
   display: block; /* or flex, or any other appropriate display value */
 }
+
+
+
+
+
+
+
+/* Your existing styles... */
+
 h1{
    
   margin-right: 20px; 
@@ -223,6 +306,7 @@ h1{
   top: 10px; /* Adjust top position */
   left: 10px; /* Adjust left position */
   z-index: -1;
+  border-radius: 10px;
   }
   
   
@@ -232,6 +316,7 @@ h1{
   width: 35%;
   height: 100px; /* Adjust the height to your preference */
   margin-bottom: 20px;
+  border-radius: 10px;
 }
 
 
@@ -256,37 +341,296 @@ h1{
     transform: translateX(-100%); /* Adjust the direction of the slide */
   }
 }
-.top-articles article,
-.main-articles article {
-  margin-bottom: 20px; /* Add margin between each article */
-}
 
 
-.top-articles article,
-.main-articles article {
-  margin-bottom: 20px; /* Add margin between each article */
-}
-
-
-/* Navigation links styles */
-.nav-links {
+/* Styling for top articles and main articles */
+.top-articles,
+.main-articles {
+  background: none;
+  margin-bottom: 20px;
   display: flex;
-  justify-content: space-around;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  align-items: center;
+  width: auto;
+  height: auto;
+  margin: auto;
+  padding: auto;
 }
 
-.nav-links li {
-  margin: 0 10px;
+.vertical-bar {
+    height: 100%;
+    width: 2px; /* Adjust thickness as needed */
+    background-color: black; /* Change color as needed */
+    margin-right: 10px; /* Adjust spacing from text */
 }
 
-.nav-links a {
-  text-decoration: none;
+.content {
+    /* Other styles for your text content */
+}
+
+  
+}
+
+
+
+
+.top-articles .article-1 {
+  background-color: #0000FF;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: none;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  
+}
+
+.top-articles .article-2 {
+  background-color: #040720;
+
+
   color: #ddd;
-  font-weight: bold;
-  transition: color 0.3s ease;
+  border: 2px solid #000000;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
 }
 
-.nav-links a:hover {
-  color: #4169e1;
+/* Styling for specific articles within main articles */
+.main-articles .article-1 {
+  background-color: #040720;
+  color: #ddd;
+  
+   border: 2px solid #ddd;
+   border-radius: 10px;
+   display: flex;
+   flex-direction: row; 
+   align-items: center; 
+   margin-bottom: 20px; 
+   
+}
+
+
+/* Media container for article 1 */
+.main-articles .article-1 .media-container-1 {
+    flex: 0 0 50%; /* Adjust the width of the media container */
+    padding-left: 5px; /* Padding between image and content */
+}
+
+/* Content container for article 1 */
+.main-articles .article-1 .content-container-1 {
+    flex: 0 0 50%; /* Adjust the width of the content container */
+    padding-left: 5px; /* Padding between image and content */
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .main-articles .article-1 {
+        flex-direction: column;
+    }
+    .main-articles .article-1 .media-container-1,
+    .main-articles .article-1 .content-container-1 {
+        flex: 1 1 auto;
+        padding-left: 0;
+    }
+}
+
+
+
+
+ 
+  
+  
+  
+  
+.main-articles .article-2 {
+  background-color: #4169E1;
+  color: #fff;
+  
+  border: 2px solid #ddd;
+  border-radius: 10px;
+}
+
+
+.main-articles .article-3 {
+  background-color: #B100FF;
+  color: #fff;
+  
+   border: 2px solid #ddd;
+   padding: 20px;
+   margin-bottom: 20px;
+   border-radius: 10px;
+}
+
+
+
+.top-articles .article-1 {
+  background-color: #B100FF;
+  color: #fff;
+  
+   border: 2px solid #ddd;
+   padding: 20px;
+   margin-bottom: 20px;
+   border-radius: 10px;
+   
+}
+
+
+
+
+
+
+a { font-family: Arial, sans-serif; /* Change the font type as desired */
+    font-size: 32px; /* Change the font size as desired */ 
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjust values for your desired shadow effect */ 
+    text-outline: 2px solid blue; /* Change color and size as desired */ 
+    
+    }
+
+
+
+    /* Style for the World link */
+    #world_link {
+        color: #800000;
+        background-color: none;
+        border-radius: none;
+        border-width: none;
+        /* Add other styles as desired */
+    }
+
+    /* Style for the Politics link */
+    #politics_link {
+        color: #800000;
+        /* Add other styles as desired */
+    }
+
+    /* Style for the Business link */
+    #business_link {
+        color: #800000;
+        /* Add other styles as desired */
+    }
+
+    /* Style for the About Me link */
+    #about_link {
+        color: #800000;
+        /* Add other styles as desired */
+    }
+
+    /* Style for the Blog link */
+    #blog_link {
+        color: #800000;
+        /* Add other styles as desired */
+    }
+
+/* Style for images inside articles */
+.main-articles img {
+    max-width: 100%; /* Ensures images don't overflow their containers */
+    height: auto; /* Maintains aspect ratio */
+    border-radius: 10px; /* Adds rounded corners to images */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow effect */
+}
+
+
+/* Style for headings and paragraphs inside articles */
+.main-articles h2 {
+    color:   #000000; /* Change the color of the headings */
+    font-size: 24px; /* Adjust the font size of the headings */
+    margin-bottom: 10px; /* Add spacing between headings and paragraphs */
+    text-align: center;
+}
+
+.main-articles p {
+    color: #fff; /* Change the color of the paragraphs */
+    font-size: 16px; /* Adjust the font size of the paragraphs */
+    line-height: 1.5; /* Set line height for better readability */
+    margin-left: 2px;
+    text-align: justify;
+    padding: 0 20px;
+}
+
+/* Style for the heading of article-2 within .main-articles */
+.main-articles .article-2 h2 {
+    color: #FF8C00; /* Change color for this specific heading */
+    font-size: 28px; /* Adjust font size */
+    text-align: centre; /* Align the heading to the left */
+    margin-bottom: 15px; /* Add more space after the heading */
+}
+
+.top-articles h2{
+     color: #57E964;
+     text-align: centre;
+}
+.top-articles .article-1 h3{
+    color: #FF8C00; /* Change color for this specific heading */
+    font-size: 28px; /* Adjust font size */
+    text-align: centre; /* Align the heading to the left */
+    margin-bottom: 15px; /* Add more space after the heading */
+}
+
+.top-articles p {
+    color: #fff; /* Change the color of the paragraphs */
+    font-size: 16px; /* Adjust the font size of the paragraphs */
+    line-height: 1.5; /* Set line height for better readability */
+    margin-left: 2px;
+    text-align: justify;
+    padding: 0 20px;
+}
+
+
+
+
+
+/* Footer Styling */
+footer {
+  position: fixed;
+  background-color: #00008B; /* Footer background color */
+  color: #ddd; /* Text color */
+  padding: 20px; /* Padding around footer content */
+  width: 100%;
+  bottom:  0;
+  padding: 20px;
+  height: 20%;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  
+  
+}
+
+.cmain-article {
+  text-align: center; /* Center align the main article in the footer */
+  margin-bottom: 20px; /* Add some space below the main article */
+}
+
+.clower-articles {
+  display: flex;
+  justify-content: space-between;
+  /* Add any specific styles for lower articles if needed */
+}
+
+.csocial-links {
+  text-align: center; /* Center align social links */
+  margin-bottom: 20px; /* Add space below social links */
+}
+
+.csocial-links a {
+  color: #fff; /* Color of social media icons */
+  margin: 0 10px; /* Add space between social media icons */
+  font-size: 24px; /* Adjust icon size */
+}
+
+.ccopyright {
+  text-align: center; /* Center align copyright text */
+}
+
+
+
+.vertical-bar {
+    height: 100%; 
+    width: 2px;
+    /* Adjust thickness as needed */
+    background-color: black;
+    /* Change color as needed */ 
+    margin-right: 10px; 
+    /* Adjust spacing from text */ 
+    }
