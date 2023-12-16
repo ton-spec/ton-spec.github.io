@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Voice Typing App</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shoelace-css/1.0.0-beta16/shoelace.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="voice.css">
+
+    </head>
+    <body>
+        <div class="container">
+
+            <h1>Use Your Voice to Type Notes</h1>
+            <p class="page-description">Type  Notes With Your Mouth </p>
+            
+
+            <sec class="no-browser-support">
+              <div class="content">Oops! Your Browser isn't Supporting the Web Speech API. Use another browser</div>
+              
+               
+              <div class="contimg">
+                  
+                   <part class="room">
+           <h3 class="mulati"><strong style="color:  brown;">Tonny Mulati </strong></h3>
+                    <img src="https://source.unsplash.com/random/1920x1080/" alt="Article Image">
+                    </part>
+             <p>Enjoy Writing without Hands</p>
+              </div>
+                </sec>
+
+            <div class="app"> 
+                <h3 style="color: #00FF00; text-align: center;">Add New Note</h3>
+                <div class="input-single">
+                    <textarea id="note-textarea" placeholder="Create a new note by typing or using voice recognition." rows="6"></textarea>
+                </div>         
+                <button id="start-record-btn" title="Start Recording">Launch Recognition</button>
+                <button id="pause-record-btn" title="Pause Recording">Pause Recognition</button>
+                
+                <button id="stop-record-btn" title="Stop Recording">Stop Recognition</button>
+
+                <button id="save-note-btn" title="Save Note">Save Notes</button>   
+                <!-- Add an icon for downloading notes -->
+
+    <!-- Add the downloadable icon -->
+    <a id="download-note-btn" href="#" title="Download">
+        <img src="https://source.unsplash.com/random/1920x1080/" alt="Download Icon">
+    </a>
+    <!-- Rest of the HTML content -->
+</div>
+
+                <p id="recording-instructions">  <strong style="color: #00FF00;"> Press Launch Recognition</strong> </p>
+                
+                <h3 style="color: #00FF00; text-align: center;">My Notes Area </h3>
+                <ul id="notes">
+                    <li>
+                        <p class="no-notes"> Sorry, You don't have any notes.</p>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+
+        <!-- Only used for the demos ads. Please ignore and remove. --> 
+        <script src=" https://" async></script>
+ 
+  <a class="links2" href="index.html"><i class="fas fa-chevron-left"></i> Previous</a>
+  <a class="links2" href="index.html">Next <i class="fas fa-chevron-right"></i></a>
+    </body>
+</html>
+
