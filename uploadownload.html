@@ -4,48 +4,108 @@
   <title>File Manager</title>
 </head>
 <body>
-  <input type="file" id="fileInput" onchange="displayFiles(event)">
-  <label for="fileInput" style="cursor: pointer;">Choose File</label>
-  <button onclick="uploadFiles()">Upload File</button>
+  <input type="file" id="fileInput">
+  <button onclick="uploadFile()">Upload File</button>
   
   <hr>
   
   <div id="fileList">
     <!-- Display uploaded files here -->
   </div>
-<script>
-  function displayFiles(event) {
-    const fileListDiv = document.getElementById('fileList');
-    fileListDiv.innerHTML = '';
 
-    const files = Array.from(event.target.files || []);
+  <div id="fileContent"> 
+    <!-- Display file content here --> 
+  </div>
 
-    files.forEach(file => {
-      const fileItem = document.createElement('div');
-      const fileName = document.createTextNode(file.name);
-      fileItem.appendChild(fileName);
-      fileListDiv.appendChild(fileItem);
+  <script>
+    let files = [];
 
-      if (file.type.startsWith('text/')) {
+    function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const newFiles = Array.from(fileInput.files);
+
+      newFiles.forEach(file => {
+        files.push(file);
+      });
+
+      displayFiles();
+    }
+
+    function displayFiles() {
+      const fileListDiv = document.getElementById('fileList');
+      fileListDiv.innerHTML = '';
+
+      files.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.innerHTML = `${file.name} 
+          <button onclick="renameFile(${index})">Rename</button>
+          <button onclick="deleteFile(${index})">Delete</button>
+          <button onclick="displayFileContent(${index})">View Content</button>`;
+
+        fileListDiv.appendChild(fileItem);
+      });
+    }
+
+    function renameFile(index) {
+      const newName = prompt('Enter new name:');
+      if (newName) {
+        files[index].name = newName;
+        displayFiles();
+      }
+    }
+
+    function deleteFile(index) {
+      files.splice(index, 1);
+      displayFiles();
+    }
+
+    function displayFileContent(index) {
+      const file = files[index];
+      const fileContentDiv = document.getElementById('fileContent');
+      fileContentDiv.innerHTML = '';
+
+      if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.maxWidth = '100%';
+        fileContentDiv.appendChild(img);
+      } else if (file.type.startsWith('text/')) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          const contentDiv = document.createElement('div');
-          contentDiv.textContent = e.target.result;
-          fileListDiv.appendChild(contentDiv);
+          fileContentDiv.innerHTML = `<pre>${e.target.result}</pre>`;
         };
         reader.readAsText(file);
-      } else {
-        const contentDiv = document.createElement('div');
-        contentDiv.textContent = `${file.name} - File content cannot be displayed.`;
-        fileListDiv.appendChild(contentDiv);
+      } else if (file.type.startsWith('video/')) {
+        const video = document.createElement('video');
+        video.src = URL.createObjectURL(file);
+        video.controls = true;
+        video.style.maxWidth = '100%';
+        fileContentDiv.appendChild(video);
+      } else if (file.type === 'application/pdf') {
+        const embed = document.createElement('embed');
+        embed.src = URL.createObjectURL(file);
+        embed.type = 'application/pdf';
+        embed.width = '100%';
+        embed.height = '600px';
+        fileContentDiv.appendChild(embed);
+      } 
+      
+      
+      // Existing code...
+
+else if (file.type.startsWith('audio/')) {
+  const audio = document.createElement('audio');
+  audio.src = URL.createObjectURL(file);
+  audio.controls = true;
+  fileContentDiv.appendChild(audio);
+}
+
+// Existing code...
+
+      else {
+        fileContentDiv.innerHTML = `<pre>${file.name} is not supported for direct preview.</pre>`;
       }
-    });
-  }
-
-  // ... (uploadFiles function and other existing script code)
-</script>
-
-
-
+    }
+  </script>
 </body>
 </html>
