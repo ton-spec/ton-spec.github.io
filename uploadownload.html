@@ -6,7 +6,7 @@
 <body>
   <input type="file" id="fileInput" style="display: none;" onchange="uploadFile(event)">
   <label for="fileInput" style="cursor: pointer;">Choose File</label>
-  <button onclick="document.getElementById('fileInput').click();">Upload File</button>
+  <button onclick="triggerFileInput()">Upload File</button>
   
   <hr>
   
@@ -26,6 +26,11 @@
 
       localStorage.setItem('filesArray', JSON.stringify(files)); // Save files array to localStorage
       displayFiles();
+    }
+
+    function triggerFileInput() {
+      const fileInput = document.getElementById('fileInput');
+      fileInput.click();
     }
 
     function displayFiles() {
