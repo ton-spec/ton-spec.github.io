@@ -303,7 +303,7 @@ h1{
   width: 100px; /* Adjust the width as needed */
   height: auto; /* Maintain aspect ratio */
   position: absolute;
-  top: 10px; /* Adjust top position */
+  top: 0; /* Adjust top position */
   left: 10px; /* Adjust left position */
   z-index: -1;
   border-radius: 10px;
@@ -634,7 +634,7 @@ footer {
     margin-right: 10px; 
     /* Adjust spacing from text */ 
     }
-. button_1 { z-index:999;
+. button { z-index:999;
             position: absolute;
             background-color: red;
   
