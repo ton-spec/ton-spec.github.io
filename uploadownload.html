@@ -5,7 +5,8 @@
 </head>
 <body>
   <input type="file" id="fileInput" style="display: none;" onchange="uploadFile(event)">
-  <label for="fileInput" style="cursor: pointer;">Upload File</label>
+  <label for="fileInput" style="cursor: pointer;">Choose File</label>
+  <button onclick="document.getElementById('fileInput').click();">Upload File</button>
   
   <hr>
   
