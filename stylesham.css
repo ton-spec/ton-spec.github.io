@@ -303,7 +303,7 @@ h1{
   width: 100px; /* Adjust the width as needed */
   height: auto; /* Maintain aspect ratio */
   position: absolute;
-  margin-top: 0; /* Adjust top position */
+  margin-top: -20px; /* Adjust top position */
   left: 10px; /* Adjust left position */
   z-index: -1;
   border-radius: 10px;
