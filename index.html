@@ -76,7 +76,7 @@ I strive, I learn, and with each keystroke, I build a future where imagination c
  
  <br>
 
-    <article class="article-2">
+    <article id="article-2"  class="article-2">
       <h3>The Redemptive Project of God</h3>
       <p> The Redemptive Project of Man
 
@@ -118,6 +118,8 @@ Salvation is in three dimensions. Your spirit is saved when you receive salvatio
 
 Those who do not believe in Jesus Christ and whose names are absent the book of life, will be thrown in the lake of fire to cry and gnash their teeth,  from where they will spend eternity which is the second death. God’s will is for all humans to be saved, and not to perish because the lake of fire was created for the devil and his evil angels. The lake of fire was not created for humans, that is why God created a system to save man. (Author: Tonny Wanjala Mulati – June, 2023) </p>
     </article>
+    
+  <button onclick="downloadText()">Download Text</button>
     <!-- Add more top articles here -->
   </aside>
 
@@ -203,6 +205,23 @@ Those who do not believe in Jesus Christ and whose names are absent the book of 
   const icons = document.querySelector('.nav-icons');
   icons.classList.toggle('show');
 }
+
+
+
+    function downloadText() {
+      // Get the text content you want to download
+      var textContent = document.getElementById('article-2').innerText;
+
+      // Create a Blob containing the text
+      var blob = new Blob([textContent], { type: 'text/plain' });
+
+      // Create a link element
+      var link = document.createElement('a');
+      link.download = 'downloaded_text.txt'; // Set the filename for the downloaded file
+      link.href = window.URL.createObjectURL(blob);
+      link.click();
+    }
+  
 
   </script>
 </body>
