@@ -13,7 +13,6 @@
   <div id="fileList">
     <!-- Display uploaded files here -->
   </div>
-
 <script>
   function displayFiles(event) {
     const fileListDiv = document.getElementById('fileList');
@@ -27,35 +26,25 @@
       fileItem.appendChild(fileName);
       fileListDiv.appendChild(fileItem);
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const contentDiv = document.createElement('div');
-        if (file.type.startsWith('text/')) {
+      if (file.type.startsWith('text/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const contentDiv = document.createElement('div');
           contentDiv.textContent = e.target.result;
-        } else {
-          contentDiv.textContent = `${file.name} - File content cannot be displayed.`;
-        }
+          fileListDiv.appendChild(contentDiv);
+        };
+        reader.readAsText(file);
+      } else {
+        const contentDiv = document.createElement('div');
+        contentDiv.textContent = `${file.name} - File content cannot be displayed.`;
         fileListDiv.appendChild(contentDiv);
-      };
-
-      reader.readAsText(file);
+      }
     });
   }
 
-  function uploadFiles() {
-    const fileListDiv = document.getElementById('fileList');
-    const files = fileListDiv.childNodes;
-
-    if (files.length === 0) {
-      alert('Please select a file to upload.');
-      return;
-    }
-
-    // Perform upload logic here (you can handle uploading to a server or saving locally)
-    // For demonstration purposes, let's just alert the number of files selected
-    alert(`Uploading ${files.length} file(s).`);
-  }
+  // ... (uploadFiles function and other existing script code)
 </script>
+
 
 
 </body>
