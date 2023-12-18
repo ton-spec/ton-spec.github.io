@@ -24,12 +24,19 @@
         files.push(file);
       });
 
+      localStorage.setItem('filesArray', JSON.stringify(files)); // Save files array to localStorage
       displayFiles();
     }
 
     function displayFiles() {
       const fileListDiv = document.getElementById('fileList');
       fileListDiv.innerHTML = '';
+
+      const storedFiles = localStorage.getItem('filesArray');
+
+      if (storedFiles) {
+        files = JSON.parse(storedFiles); // Retrieve files array from localStorage
+      }
 
       files.forEach((file, index) => {
         const fileItem = document.createElement('div');
