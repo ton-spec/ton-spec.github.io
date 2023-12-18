@@ -4,9 +4,7 @@
   <title>File Manager</title>
 </head>
 <body>
-  <input type="file" id="fileInput" style="display: none;" onchange="handleFiles()">
-  <label for="fileInput" style="cursor: pointer;">Choose File</label>
-  <button onclick="uploadFiles()">Upload File</button>
+  <input type="file" id="fileInput" onchange="displayFiles(event)">
   
   <hr>
   
@@ -15,36 +13,15 @@
   </div>
 
   <script>
-    let files = [];
-
-    function handleFiles() {
-      const fileInput = document.getElementById('fileInput');
-      files = Array.from(fileInput.files || []);
-      displayFiles();
-    }
-
-    function uploadFiles() {
-      if (files.length === 0) {
-        alert('Please select a file to upload.');
-        return;
-      }
-
-      // Perform upload logic here (you can handle uploading to a server or saving locally)
-      // For demonstration purposes, let's just alert the number of files selected
-      alert(`Uploading ${files.length} file(s).`);
-    }
-
-    function displayFiles() {
+    function displayFiles(event) {
       const fileListDiv = document.getElementById('fileList');
       fileListDiv.innerHTML = '';
 
+      const files = Array.from(event.target.files || []);
+
       files.forEach(file => {
         const fileItem = document.createElement('div');
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(file);
-        link.textContent = file.name;
-
-        fileItem.appendChild(link);
+        fileItem.textContent = file.name;
         fileListDiv.appendChild(fileItem);
       });
     }
