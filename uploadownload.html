@@ -4,8 +4,8 @@
   <title>File Manager</title>
 </head>
 <body>
-  <input type="file" id="fileInput" onchange="uploadFile(event)">
-  <button onclick="uploadFile()">Upload File</button>
+  <input type="file" id="fileInput" style="display: none;" onchange="uploadFile(event)">
+  <label for="fileInput" style="cursor: pointer;">Upload File</label>
   
   <hr>
   
@@ -17,7 +17,6 @@
     let files = [];
 
     function uploadFile(event) {
-      const fileInput = document.getElementById('fileInput');
       const newFiles = Array.from(event.target.files || []);
 
       newFiles.forEach(file => {
