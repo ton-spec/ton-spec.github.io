@@ -4,9 +4,7 @@
   <title>File Manager</title>
 </head>
 <body>
-  <input type="file" id="fileInput" style="display: none;" onchange="uploadFile(event)">
-  <label for="fileInput" style="cursor: pointer;">Choose File</label>
-  <button onclick="triggerFileInput()">Upload File</button>
+  <input type="file" id="fileInput" onchange="handleFiles()">
   
   <hr>
   
@@ -15,38 +13,15 @@
   </div>
 
   <script>
-    let files = [];
-
-    function uploadFile(event) {
-      const newFiles = Array.from(event.target.files || []);
-
-      newFiles.forEach(file => {
-        files.push(file);
-      });
-
-      localStorage.setItem('filesArray', JSON.stringify(files)); // Save files array to localStorage
-      displayFiles();
-    }
-
-    function triggerFileInput() {
+    function handleFiles() {
       const fileInput = document.getElementById('fileInput');
-      fileInput.click();
-    }
-
-    function displayFiles() {
       const fileListDiv = document.getElementById('fileList');
       fileListDiv.innerHTML = '';
 
-      const storedFiles = localStorage.getItem('filesArray');
-
-      if (storedFiles) {
-        files = JSON.parse(storedFiles); // Retrieve files array from localStorage
-      }
-
-      files.forEach((file, index) => {
+      Array.from(fileInput.files).forEach(file => {
         const fileItem = document.createElement('div');
         const link = document.createElement('a');
-        link.href = `displayResults.html?index=${index}`;
+        link.href = URL.createObjectURL(file);
         link.textContent = file.name;
 
         fileItem.appendChild(link);
