@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Manager</title>
+</head>
+<body>
+  <input type="file" id="fileInput">
+  <button onclick="uploadFile()">Upload File</button>
+  
+  <hr>
+  
+  <div id="fileList">
+    <!-- Display uploaded files here -->
+  </div>
+
+  <script>
+    let files = [];
+
+    function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const newFiles = Array.from(fileInput.files);
+
+      newFiles.forEach(file => {
+        files.push(file);
+      });
+
+      displayFiles();
+    }
+
+    function displayFiles() {
+      const fileListDiv = document.getElementById('fileList');
+      fileListDiv.innerHTML = '';
+
+      files.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.innerHTML = `${file.name} 
+          <a href="displayResults.html?index=${index}">View Content</a>`;
+
+        fileListDiv.appendChild(fileItem);
+      });
+    }
+  </script>
+</body>
+</html>
