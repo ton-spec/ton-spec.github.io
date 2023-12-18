@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Display Results</title>
+</head>
+<body>
+  <div id="fileContent"> 
+    <!-- Content will be displayed here --> 
+  </div>
+ <button onclick="downloadFile()">Download</button>
+
+ 
+  
+  
+  
+ 
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get('index');
+
+    if (index !== null) {
+      const file = files[parseInt(index)];
+      const fileContentDiv = document.getElementById('fileContent');
+
+      if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.maxWidth = '100%';
+        fileContentDiv.appendChild(img);
+      } else if (file.type.startsWith('text/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          fileContentDiv.innerHTML = `<pre>${e.target.result}</pre>`;
+        };
+        reader.readAsText(file);
+      } else if (file.type.startsWith('video/')) {
+        const video = document.createElement('video');
+        video.src = URL.createObjectURL(file);
+        video.controls = true;
+        video.style.maxWidth = '100%';
+        fileContentDiv.appendChild(video);
+      } else if (file.type === 'application/pdf') {
+        const embed = document.createElement('embed');
+        embed.src = URL.createObjectURL(file);
+        embed.type = 'application/pdf';
+        embed.width = '100%';
+        embed.height = '600px';
+        fileContentDiv.appendChild(embed);
+      } else if (file.type.startsWith('audio/')) {
+        const audio = document.createElement('audio');
+        audio.src = URL.createObjectURL(file);
+        audio.controls = true;
+        fileContentDiv.appendChild(audio);
+      } else {
+        fileContentDiv.innerHTML = `<pre>${file.name} is not supported for direct preview.</pre>`;
+      }
+    }
+    
+    
+    
+    
+    
+    
+ 
+    
+    
+    function downloadFile() {
+      const fileContentDiv = document.getElementById('fileContent');
+      const file = /* retrieve your file object */; // Get the file object
+
+      if (file.type.startsWith('image/')) {
+        downloadImage(file);
+      } else if (file.type.startsWith('video/')) {
+        downloadVideo(file);
+      } else if (file.type.startsWith('audio/')) {
+        downloadAudio(file);
+      } else if (file.type === 'application/pdf') {
+        downloadPDF(file);
+      } else if (file.type.startsWith('text/')) {
+        downloadText(file);
+      } else {
+        alert('File type not supported for download.');
+      }
+    }
+
+    function downloadImage(file) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'downloaded_image.png'; // Set the filename for the downloaded file
+      link.click();
+    }
+
+    function downloadVideo(file) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'downloaded_video.mp4'; // Set the filename for the downloaded file
+      link.click();
+    }
+
+    function downloadAudio(file) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'downloaded_audio.mp3'; // Set the filename for the downloaded file
+      link.click();
+    }
+
+    function downloadPDF(file) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'downloaded_pdf.pdf'; // Set the filename for the downloaded file
+      link.click();
+    }
+
+    function downloadText(file) {
+      const textContent = fileContentDiv.innerText;
+      const blob = new Blob([textContent], { type: 'text/plain' });
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'downloaded_text.txt'; // Set the filename for the downloaded file
+      link.click();
+    }
+  
+  </script>
+</body>
+</html>
