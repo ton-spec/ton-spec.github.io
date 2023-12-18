@@ -40,9 +40,11 @@
 
       files.forEach((file, index) => {
         const fileItem = document.createElement('div');
-        fileItem.innerHTML = `${file.name} 
-          <a href="displayResults.html?index=${index}">View Content</a>`;
+        const link = document.createElement('a');
+        link.href = `displayResults.html?index=${index}`;
+        link.textContent = file.name;
 
+        fileItem.appendChild(link);
         fileListDiv.appendChild(fileItem);
       });
     }
