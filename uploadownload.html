@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>File Manager</title>
+  <style>
+    /* Ensure elements are visible */
+    input[type="file"],
+    label[for="fileInput"],
+    button {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <input type="file" id="fileInput" onchange="displayFiles(event)">
@@ -14,7 +24,8 @@
     <!-- Display uploaded files here -->
   </div>
 
-  <script>
+
+f<script>
     function displayFiles(event) {
       const fileListDiv = document.getElementById('fileList');
       fileListDiv.innerHTML = '';
