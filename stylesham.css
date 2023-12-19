@@ -638,7 +638,10 @@ footer {
     }
 button { z-index:999;
             position: absolute;
-            background-color: red;
+            background-color: brown;
+            border-radius: 10px;
+            color: white;
+
   
 }
 
@@ -646,7 +649,7 @@ button { z-index:999;
 
 .video-container {
             position: relative;
-            padding-bottom: 56.8%; /* 16:9 aspect ratio (height: width) */
+            padding-bottom: 56.25%; /* 16:9 aspect ratio (height: width) */
             overflow: hidden;
         }
         .video-container iframe {
