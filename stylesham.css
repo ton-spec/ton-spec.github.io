@@ -57,7 +57,7 @@ header {
   border: 2px solid #000000;
   border-radius: 4px;
   margin-right: 10px;
-  
+  left: 0;
 }
 
 .subscribe-bar button {
@@ -67,6 +67,7 @@ header {
   background-color: #4169E1;
   color: white;
   cursor: pointer;
+  right: 0;
 
 }
 
