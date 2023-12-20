@@ -13,7 +13,7 @@ body {
 
 /* Header */
 header {
-  position: relative;
+  position: fixed;
   background-color: #808000;
   color: #ddd;
   padding: 20px;
@@ -91,7 +91,7 @@ header {
   flex-direction: column;
   justify-content: space-around;
   position: absolute;
-  right: 10%; /* Adjust the right position to create space from the right edge */
+  right: 30%; /* Adjust the right position to create space from the right edge */
   top: 50%; /* Position vertically at the center of the header */
   transform: translateY(-50%); /* Center it vertically using transform */
 }
@@ -122,11 +122,12 @@ header {
         left: 20%;
         width: auto;
         padding: 10px;
+        height: auto;
     }
 
     .search-container input[type="text"] {
        width: auto;
-      padding: 10px;
+      padding: auto;
         /* Adjusted styles for input in smaller screens */
         /* Example: You might want to change the width or padding */
     }
@@ -262,6 +263,8 @@ main {
   padding: 10px;
   left: 0;
   width: 50%;
+  height: auto;
+
 }
 
 .search-container input[type="text"] {
@@ -269,10 +272,11 @@ main {
   flex: 0 1 300px; /* won't grow, can shrink, initial width of 300px */
 }
   border: none;
-  padding: 10px;
+  padding: 50px;
   width: 20px; /* Optional: Set a specific width */
   border-radius: 10px;
   left: 0;
+  height: auto;
 }
 
 
