@@ -26,6 +26,7 @@ header {
   overflow-x: hidden;
   top: 0;
   left: 0;
+  margin-bottom: 10px;
   
   }
 
@@ -41,6 +42,7 @@ header {
   overflow-x: hidden;
   position: absolute;
   z-index: 1;
+  
 }
 
 
@@ -93,7 +95,7 @@ header {
   flex-direction: column;
   justify-content: space-around;
   position: absolute;
-  right: 50%; /* Adjust the right position to create space from the right edge */
+  right: 25%; /* Adjust the right position to create space from the right edge */
   top: 50%; /* Position vertically at the center of the header */
   transform: translateY(-50%); /* Center it vertically using transform */
 }
@@ -144,7 +146,7 @@ header {
 
     .hamburger-icon {
     
-    right: 50%; /* Adjust the left position to create space from the left edge */
+    right: 25%; /* Adjust the left position to create space from the left edge */
         /* Adjusted styles for hamburger icon */
         /* Example: You might want to change the positioning or color */
     }
@@ -174,7 +176,7 @@ header {
 
     .hamburger-icon {
     
-    right: 50%; /* Adjust the left position to create space from the left edge */
+    right: 25%; /* Adjust the left position to create space from the left edge */
         /* Adjusted styles for hamburger icon */
         /* Example: You might want to change the positioning or color */
     }
