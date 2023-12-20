@@ -20,7 +20,7 @@ header {
   border-bottom: 1px solid #FF8E7;
   height: 100px;
   width: ;
-  display: flex;
+  display: block-inline;
   justify-content: space-between;
   align-items: center;
   
@@ -30,7 +30,7 @@ header {
 
 /* Header content */
 .header-content {
-  display: flex;
+  display: block-inline;
   justify-content: space-between;
   align-items: center;
   height: 100%;
