@@ -44,7 +44,7 @@ header {
   width: 100%;
   overflow-x: hidden;
   position: absolute;
-  z-index: 1;
+  z-index: 999;
   
 }
 
@@ -666,7 +666,7 @@ footer {
     margin-right: 10px; 
     /* Adjust spacing from text */ 
     }
-button { z-index:999;
+button { z-index:99;
             position: absolute;
             background-color: brown;
             border-radius: 10px;
