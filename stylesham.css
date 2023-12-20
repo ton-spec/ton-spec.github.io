@@ -91,7 +91,7 @@ header {
   flex-direction: column;
   justify-content: space-around;
   position: absolute;
-  right: 0; /* Adjust the right position to create space from the right edge */
+  right: 5px; /* Adjust the right position to create space from the right edge */
   top: 50%; /* Position vertically at the center of the header */
   transform: translateY(-50%); /* Center it vertically using transform */
 }
