@@ -18,7 +18,7 @@ header {
   color: #ddd;
   padding: 10px;
   border-bottom: 1px solid #FF8E7;
-  height: 100px;
+  height: 120px;
   width: 100%;
   display: block-inline;
   justify-content: space-between;
@@ -132,7 +132,7 @@ header {
     }
 
     .search-container input[type="text"] {
-       width: auto;
+       width: 30px;
       padding: auto;
         /* Adjusted styles for input in smaller screens */
         /* Example: You might want to change the width or padding */
@@ -167,7 +167,7 @@ header {
     .search-icon {
         /* Adjusted styles for search icon */
         /* Example: You might want to change the positioning or color */
-        left: 10;
+        left: 5;
         padding: 10px;
         
     }
@@ -279,7 +279,7 @@ main {
 }
   border: none;
   padding: 50px;
-  width: 10px; /* Optional: Set a specific width */
+  width: 5px; /* Optional: Set a specific width */
   border-radius: 10px;
   left: 0;
   height: 20px;
@@ -288,7 +288,7 @@ main {
 
 .search-icon {
   position: absolute;
-  right: 10px;
+  right: 5px;
   color: #39ff14;
   text-decoration: none;
 }
