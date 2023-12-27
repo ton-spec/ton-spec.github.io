@@ -1,0 +1,81 @@
+/* styles.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('tonny.png'); /* Replace 'tonny.png' with the path to your image */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+container {
+position: ;
+}
+
+h1 {
+  text-align: center;
+}
+
+input[type="text"],
+#intervalInput {
+  padding: 8px;
+  margin: 5px;
+  width: 250px;
+  background-color: #CCFFCC;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  padding: 8px 15px;
+  margin: 5px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 3px;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+label {
+  margin-top: 10px;
+}
+
+ul {
+  list-style-type: decimal;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #CCFFCC;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+}
+
+li button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+li button:hover {
+  background-color: #c0392b;
+}
