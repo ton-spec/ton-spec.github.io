@@ -20,7 +20,7 @@ header {
   border-bottom: 1px solid #FF8E7;
   height: 150px;
   width: 100%;
-  display: block-inline;
+  display: inline-flex;
   justify-content: space-between;
   align-items: center;
   overflow-x: hidden;
@@ -518,7 +518,14 @@ a { font-family: Arial, sans-serif; /* Change the font type as desired */
     
     }
 
-
+/* Style for the World link */
+    #task_link {
+        color: #800000;
+        background-color: none;
+        border-radius: none;
+        border-width: none;
+        /* Add other styles as desired */
+    }
 
     /* Style for the World link */
     #world_link {
