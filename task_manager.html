@@ -29,7 +29,7 @@
   function displayTasks() {
   const tasks = getTasks();
   const taskList = document.getElementById('taskList');
-  taskList.innerHTML = ''; // Clear previous tasks before displaying new ones
+  taskList.innerText = ''; // Clear previous tasks before displaying new ones
   tasks.forEach((task, index) => {
     const li = document.createElement('li');
     const span = document.createElement('span');
