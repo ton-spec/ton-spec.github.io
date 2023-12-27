@@ -703,3 +703,6 @@ button {    z-index: 1;
   
 }
 
+.nav-icons hide ul {
+  list-style: none;
+}
