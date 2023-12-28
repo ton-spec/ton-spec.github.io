@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF to Editable DOCX with Editor</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/2.0.0-beta.4/docx.umd.js"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link href="quill-edownload.css" rel="stylesheet"> 
+  
+  
+</head>
+<body>
+  <input type="file" id="fileInput" accept=".pdf">
+  <div id="editor"></div>
+  <button onclick="convertToDocx()">Convert to Editable DOCX</button>
+  <div id="output">Extracted text from PDF will appear here.</div>
+  <button onclick="saveContent()">Save</button>
+  <a id="downloadLink" style="display: none;" download="output.docx">Download DOCX</a>
+
+  <script>
+    var quill = new Quill('#editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ 'header': [1, 2, 3, 4, 5, 6] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'script': 'sub'}, { 'script': 'super' }],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'size': ['small', false, 'large', 'huge'] }],
+          [{ 'align': [] }],
+          ['link', 'image'], // Image insertion button
+          ['alley', 'fascinating'], // Custom buttons
+          ['clean']
+        ]
+      }
+    });
+
+    async function convertToDocx() {
+      const file = document.getElementById('fileInput').files[0];
+      const reader = new FileReader();
+
+      reader.onload = async function(event) {
+        const typedArray = new Uint8Array(event.target.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let fullText = '';
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const textItems = textContent.items;
+          textItems.forEach(function(item) {
+            fullText += item.str + '\n'; // Adding newline for paragraphs
+          });
+        }
+
+        document.getElementById('output').textContent = fullText;
+
+        // Set the extracted text as content in the Quill editor
+        quill.root.innerText = fullText;
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    function saveContent() {
+      const content = quill.root.innerHTML;
+
+      // Convert the content to DOCX
+      const doc = new docx.Document();
+      doc.addSection({
+        properties: {},
+        children: [
+          new docx.Paragraph(content)
+        ]
+      });
+
+      // Generate and download DOCX file
+      docx.Packer.toBlob(doc).then(blob => {
+        const downloadLink = document.getElementById('downloadLink');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.style.display = 'block';
+      });
+    }
+  </script>
+</body>
+</html>

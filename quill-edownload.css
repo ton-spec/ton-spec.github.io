@@ -1,0 +1,53 @@
+/* Style for the main body */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Style for the file input */
+#fileInput {
+  margin-bottom: 10px;
+}
+
+/* Style for the Quill editor */
+#editor {
+  height: 300px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #ffffff; /* Adjusted background color */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+}
+
+/* Style for buttons */
+button, #downloadLink {
+  padding: 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #0056b3; /* Adjusted button background color */
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Box shadow effect */
+}
+
+button:hover, #downloadLink:hover {
+  background-color: #004080; /* Darker color on hover */
+}
+
+/* Style for the output div */
+#output {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #ffffff; /* Adjusted background color */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+  margin-bottom: 20px;
+}
+
+/* Additional styling specific to your project needs can be added here */
