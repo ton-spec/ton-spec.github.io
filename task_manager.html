@@ -1,114 +1,264 @@
 <!DOCTYPE html>
 <html>
-  <html lang="en">
 <head>
   <title>Offline Task Manager</title>
   <meta charset = "UTF-8"/>
 <meta name= "viewport" content="width= device-width", initial-scale=1.0/>
-  <link rel="stylesheet" href="task_manager.css">
+<link rel="stylesheet" href="task.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+ 
+ 
 </head>
-
 <body>
-    
-    
-        
-  <h1>Tasks Manager</h1>
+<div class="header">
+    <h1> Mulati Task Manager</h1>
+    <label for="profilePicInput" class="profile-pic">
+      <input type="file" id="profilePicInput" accept="image/*" onchange="displayProfilePic(event)">
+      <img id="profilePic" src="placeholder.jpg" alt="Profile Picture">
+    </label>
+
+</div>
+
+
+  
+  
+  
+  
   <input type="text" id="taskInput" placeholder="Enter a task">
+  
+  <label for="prioritySelect">Select Priority:</label>
+<select id="prioritySelect">
+  <option value="1">Low</option>
+  <option value="2">Medium</option>
+  <option value="3">High</option>
+  <!-- Add more options as needed -->
+</select>
+
+  
   <button onclick="addTask()">Add Task</button>
   <button onclick="readTasksAloud()">Read Tasks Aloud</button>
   <label for="intervalInput">Read tasks at intervals (in seconds):</label>
-<input type="text" id="intervalInput" placeholder="Enter time interval">
-<button onclick="startReadingTasksAtIntervals()">Start Reading at Intervals</button>
-<button onclick="stopReadingTasksAtIntervals()">Stop Reading at Intervals</button>
-<h2> My Tasks List</h2>
-
-
+  <input type="text" id="intervalInput" placeholder="Enter time interval">
+  <button onclick="startReadingTasksAtIntervals()">Start Reading at Intervals</button>
+  <button onclick="stopReadingTasksAtIntervals()">Stop Reading at Intervals</button>
 
   <ul id="taskList"></ul>
   <script>
-  function displayTasks() {
+    // Function to retrieve tasks from Local Storage or return an empty array
+    function getTasks() {
+      const storedTasks = localStorage.getItem('tasks');
+      return storedTasks ? JSON.parse(storedTasks) : [];
+    }
+
+    // Function to save tasks to Local Storage
+    function saveTasks(tasks) {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+  
+// Function to add a task
+function addTask() {
+  const taskInput = document.getElementById('taskInput');
+  const taskDescription = taskInput.value.trim();
+  
+  const prioritySelect = document.getElementById('prioritySelect');
+  const taskPriority = parseInt(prioritySelect.value);
+
+  if (taskDescription !== '' && !isNaN(taskPriority)) {
+    const tasks = getTasks();
+    const currentTime = new Date().toLocaleString(); // Get current time
+    tasks.push({
+      taskName: taskDescription,
+      completed: false,
+      priority: taskPriority,
+      lastUpdated: currentTime,
+      initialUpdate: currentTime, // Set initialUpdate to current time when adding a new task
+      finalUpdate: null // Set finalUpdate to null initially
+    });
+    saveTasks(tasks);
+    displayTasks();
+    taskInput.value = '';
+  } else {
+    alert('Please enter a task description and select a priority.');
+  }
+}
+
+
+// Function to display tasks on the HTML page
+function displayTasks() {
   const tasks = getTasks();
   const taskList = document.getElementById('taskList');
   taskList.innerText = ''; // Clear previous tasks before displaying new ones
+
   tasks.forEach((task, index) => {
     const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.textContent = task;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed || false;
+    checkbox.onchange = function () {
+      toggleCompletion(index);
+    };
+
+    const taskLabel = document.createElement('label');
+    taskLabel.textContent = task.taskName;
+
+    const prioritySpan = document.createElement('span');
+    prioritySpan.textContent = `Priority: ${task.priority}`;
+
+    const lastUpdatedSpan = document.createElement('span');
+    lastUpdatedSpan.textContent = `Last Updated: ${task.lastUpdated}`;
+
+    const timeDiffSpan = document.createElement('span');
+    if (task.initialUpdate && task.finalUpdate) {
+      const timeDifference = calculateTimeDifference(task.initialUpdate, task.finalUpdate);
+      timeDiffSpan.textContent = `Time Difference: ${timeDifference} seconds`;
+    }
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
-    deleteButton.onclick = function() {
+    deleteButton.onclick = function () {
       deleteTask(index);
     };
 
-    li.appendChild(span);
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.onclick = function () {
+      editTask(index);
+    };
+
+    li.appendChild(checkbox);
+    li.appendChild(taskLabel);
+    li.appendChild(prioritySpan);
+    li.appendChild(lastUpdatedSpan);
+    li.appendChild(timeDiffSpan);
+    li.appendChild(editButton);
     li.appendChild(deleteButton);
     taskList.appendChild(li);
   });
 }
 
-function getTasks() {
-  const storedTasks = localStorage.getItem('tasks');
-  return storedTasks ? JSON.parse(storedTasks) : [];
-}
 
-function saveTasks(tasks) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
 
-function addTask() {
-  const taskInput = document.getElementById('taskInput');
-  const task = taskInput.value.trim();
 
-  if (task !== '') {
-    const tasks = getTasks();
-    tasks.push(task);
-    saveTasks(tasks);
-    displayTasks();
-    taskInput.value = '';
-  } else {
-    alert('Please enter a task.');
+
+  
+  function calculateTimeDifference(initialTime, finalTime) {
+    const initialTimestamp = new Date(initialTime).getTime();
+    const finalTimestamp = new Date(finalTime).getTime();
+
+    const difference = finalTimestamp - initialTimestamp;
+    const secondsDifference = Math.abs(difference / 1000);
+
+    return secondsDifference;
   }
-}
 
-function deleteTask(index) {
+  
+
+
+
+
+
+
+
+
+function toggleCompletion(index) {
   const tasks = getTasks();
-  tasks.splice(index, 1);
+  const currentTask = tasks[index];
+
+  const initialUpdate = new Date(currentTask.lastUpdated).getTime(); // Store initial update time in milliseconds
+
+  currentTask.completed = !currentTask.completed; // Toggle completion status
+  
+  if (currentTask.completed) {
+    currentTask.finalUpdate = new Date().getTime(); // Update finalUpdate only when completed
+  }
+
+  currentTask.lastUpdated = new Date().toLocaleString(); // Update lastUpdated to current time
+
   saveTasks(tasks);
   displayTasks();
+
+  const timeDifference = calculateTimeDifference(currentTask.initialUpdate, currentTask.finalUpdate);
+  console.log(`Time difference for task ${index}: ${timeDifference}`);
 }
 
-function readTasksAloud() {
-  const tasks = getTasks();
-  const speech = new SpeechSynthesisUtterance();
-  speech.lang = 'en-US';
 
-  const tasksText = tasks.length > 0 ? tasks.join('. ') : 'No tasks available';
-  speech.text = `Your tasks are: ${tasksText}`;
 
-  window.speechSynthesis.speak(speech);
-}
+   
+   
+   
 
-let intervalID;
+    // Function to delete a task
+    function deleteTask(index) {
+      const tasks = getTasks();
+      tasks.splice(index, 1);
+      saveTasks(tasks);
+      displayTasks();
+    }
 
-function startReadingTasksAtIntervals() {
-  const intervalInput = document.getElementById('intervalInput').value;
-  const intervalSeconds = parseInt(intervalInput, 10);
+    // Function to edit a task
+    function editTask(index) {
+      const tasks = getTasks();
+      const newTask = prompt('Enter the new task:');
 
-  if (!isNaN(intervalSeconds) && intervalSeconds > 0) {
-    intervalID = setInterval(readTasksAloud, intervalSeconds * 1000);
-  } else {
-    alert('Please enter a valid positive number for the interval in seconds.');
+      if (newTask !== null && newTask.trim() !== '') {
+        tasks[index].taskName = newTask.trim();
+        saveTasks(tasks);
+        displayTasks();
+      } else if (newTask !== null && newTask.trim() === '') {
+        alert('Task cannot be empty.');
+      }
+    }
+
+    // Function to read tasks aloud
+    function readTasksAloud() {
+      const tasks = getTasks();
+      const speech = new SpeechSynthesisUtterance();
+      speech.lang = 'en-US';
+
+      const tasksText = tasks.length > 0 ? tasks.map(task => task.taskName).join('. ') : 'No tasks available';
+      speech.text = `Your tasks are: ${tasksText}`;
+
+      window.speechSynthesis.speak(speech);
+    }
+
+    // Function to start reading tasks at specified intervals
+    let intervalID;
+    function startReadingTasksAtIntervals() {
+      const intervalInput = document.getElementById('intervalInput').value;
+      const intervalSeconds = parseInt(intervalInput, 10);
+
+      if (!isNaN(intervalSeconds) && intervalSeconds > 0) {
+        intervalID = setInterval(readTasksAloud, intervalSeconds * 1000);
+      } else {
+        alert('Please enter a valid positive number for the interval in seconds.');
+      }
+    }
+
+    // Function to stop reading tasks at intervals
+    function stopReadingTasksAtIntervals() {
+      clearInterval(intervalID);
+    }
+
+    // Call displayTasks() to initially display tasks when the page loads
+    displayTasks();
+    
+    
+    
+    
+    
+    function displayProfilePic(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function() {
+    const profilePic = document.getElementById('profilePic');
+    profilePic.src = reader.result;
   }
+  reader.readAsDataURL(file);
 }
 
-function stopReadingTasksAtIntervals() {
-  clearInterval(intervalID);
-}
-
-displayTasks(); // Call displayTasks() to initially display tasks when the page loads
-
+    
   </script>
 </body>
 </html>
- 
