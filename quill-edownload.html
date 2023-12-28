@@ -65,7 +65,7 @@
     }
 
     function saveContent() {
-      const content = quill.root.innerHTML;
+      const content = quill.root.innerText;
 
       // Convert the content to DOCX
       const doc = new docx.Document();
