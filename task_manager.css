@@ -1,50 +1,38 @@
-/* styles.css */
-
 body {
   font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   margin: 0;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-image: url('tonny.png'); /* Replace 'tonny.png' with the path to your image */
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-container {
-position: ;
 }
 
 h1 {
   text-align: center;
+  color: #00BB00;
 }
 
 input[type="text"],
-#intervalInput {
-  padding: 8px;
-  margin: 5px;
-  width: 250px;
-  background-color: #CCFFCC;
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 button {
-  padding: 8px 15px;
+  padding: 10px 20px;
   margin: 5px;
-  cursor: pointer;
-  background-color: blue;
-  color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
-  background-color: #2980b9;
-}
-
-label {
-  margin-top: 10px;
+  background-color: #45a049;
 }
 
 ul {
@@ -53,29 +41,83 @@ ul {
 }
 
 li {
-  margin-bottom: 10px;
+  background-color: #fff;
   padding: 10px;
-  background-color: #CCFFCC;
+  margin-bottom: 5px;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 900px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #000000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-li button {
-  padding: 5px 10px;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 3px;
+li:last-child {
+  margin-bottom: 0;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+span {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #777;
+}
+
+label {
+  font-weight: bold;
+}
+
+button.editButton {
+  background-color: #ff9800;
+}
+
+button.editButton:hover {
+  background-color: #e68a00;
+}
+
+button.deleteButton {
+  background-color: #f44336;
+}
+
+button.deleteButton:hover {
+  background-color: #d32f2f;
+}
+
+/* Styles for circular profile picture input */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.profile-pic {
+  position: relative;
+  width: 110px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.profile-pic input[type="file"] {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
   cursor: pointer;
 }
 
-li button:hover {
-  background-color: #c0392b;
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+
+
+
+
