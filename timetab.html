@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="timetab.css">
+    <script defer src="timetab.js"></script>
+    <title>High School Timetable</title>
+</head>
+<body>
+    <!-- Main form for input -->
+    <div class="form">
+        <label for="classroom">Select Classroom:</label>
+        <select id="classroomSelect">
+            <option value="classroom1">Classroom 1</option>
+            <option value="classroom2">Classroom 2</option>
+        </select>
+
+        <label for="learningDays">Select Learning Days:</label>
+        <select id="learningDays" multiple>
+            <option value="Mon">Monday</option>
+            <option value="Tue">Tuesday</option>
+            <option value="Wed">Wednesday</option>
+            <option value="Thu">Thursday</option>
+            <option value="Fri">Friday</option>
+        </select>
+
+        <!-- Section for entering teachers and subjects -->
+        <div id="subjectLessons">
+            <h4>Enter Teachers and Subjects:</h4>
+            
+            <!-- First subject row -->
+            <div class="subject-row">
+                <input type="text" placeholder="Teacher Name" class="teacher" />
+                <input type="number" placeholder="Number of Subjects" class="numSubjects" min="1" />
+            </div>
+
+            <!-- Add 7 more subject rows (customize as needed) -->
+            <div class="subject-row">
+                <input type="text" placeholder="Teacher Name" class="teacher" />
+                <input type="number" placeholder="Number of Subjects" class="numSubjects" min="1" />
+            </div>
+            <!-- Repeat the above subject-row for each additional teacher -->
+
+            <h4>Subject Details:</h4>
+            
+            <!-- Subject data row for each subject and teacher combination -->
+            <div class="subject-data-row">
+                <input type="text" placeholder="Subject" class="subject" />
+                <input type="number" placeholder="Lessons per Week" class="lessonsPerWeek" min="1" />
+            </div>
+            <!-- Repeat the above subject-data-row for each subject and teacher combination -->
+        </div>
+
+        <!-- Button to trigger timetable generation -->
+        <button onclick="generateTimetable()">Generate Timetable</button>
+    </div>
+
+    <!-- Timetable display containers for each classroom -->
+    <div class="timetable" id="classroom1"></div>
+    <div class="timetable" id="classroom2"></div>
+</body>
+</html>
