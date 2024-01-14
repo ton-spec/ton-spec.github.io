@@ -25,7 +25,7 @@
     document.body.appendChild(renderer.domElement);
 
     const geometry = new THREE.SphereGeometry(2, 32, 32);
-    const texture = new THREE.TextureLoader().load("https://pixabay.com/photos/earth-globe-planet-world-space-11015/");
+    const texture = new THREE.TextureLoader().load("https://via.placeholder.com/512");
 
     const material = new THREE.MeshPhongMaterial({ map: texture });
     const sphere = new THREE.Mesh(geometry, material);
