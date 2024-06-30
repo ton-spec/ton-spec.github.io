@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Announcer</title>
+    <link rel="stylesheet" href="timet1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <h1>Timetable Announcer</h1>
+        <button id="toggleButton">Start Announcer</button>
+        <div id="announcement">Click the button to start the timetable announcer.</div>
+    </div>
+    <script>
+        let intervalId = null;
+
+        document.getElementById('toggleButton').addEventListener('click', function() {
+            if (intervalId === null) {
+                startTimetableAnnouncer();
+                this.textContent = 'Stop Announcer';
+            } else {
+                stopTimetableAnnouncer();
+                this.textContent = 'Start Announcer';
+            }
+        });
+
+        function startTimetableAnnouncer() {
+            intervalId = setInterval(checkTimetable, 30000); // check every 30 seconds
+            checkTimetable(); // initial check
+        }
+
+        function stopTimetableAnnouncer() {
+            clearInterval(intervalId);
+            intervalId = null;
+            document.getElementById('announcement').textContent = 'Timetable announcer stopped.';
+        }
+
+        const timetable = {
+            "Monday": {
+                "08:00-08:40": "FORM 4 GEOGRAPHY",
+                "08:40-09:20": "FORM 3 HISTORY",
+                "09:20-10:00": "BREAK",
+                "10:00-10:40": "FORM 4",
+                "10:40-11:20": "FORM 1",
+                "11:20-12:00": "FORM 2",
+                "12:00-12:40": "FORM 3",
+                "12:40-13:20": "FORM 4",
+                "13:20-14:00": "FORM 1",
+                "14:00-14:40": "FORM 2",
+                "14:40-15:00": "FORM 3",
+                "15:00-15:40": "FORM 4",
+                "15:40-16:20": "FORM 2",
+                "16:20-17:00": "FORM 3"
+            },
+            "Tuesday": {
+                "08:00-08:40": "FORM 4 GEOGRAPHY",
+                "08:40-09:20": "FORM 3 HISTORY",
+                "09:20-10:00": "BREAK",
+                "10:00-10:40": "FORM 4",
+                "10:40-11:20": "FORM 1",
+                "11:20-12:00": "FORM 2",
+                "12:00-12:40": "FORM 3",
+                "12:40-13:20": "FORM 4",
+                "13:20-14:00": "FORM 1",
+                "14:00-14:40": "FORM 2",
+                "14:40-15:00": "FORM 3",
+                "15:00-15:40": "FORM 4",
+                "15:40-16:20": "FORM 2",
+                "16:20-17:00": "FORM 3"
+            },
+            "Wednesday": {
+                "08:00-08:40": "FORM 4 GEOGRAPHY",
+                "08:40-09:20": "FORM 3 HISTORY",
+                "09:20-10:00": "BREAK",
+                "10:00-10:40": "FORM 4 MUSIC",
+                "10:40-11:20": "FORM 1 COMPUTER STUDIES",
+                "11:20-12:00": "FORM 2 C.R.E",
+                "12:00-12:40": "FORM 3 ENGLISH",
+                "12:40-13:20": "FORM 4 BUSINESS STUDIES",
+                "13:20-14:00": "FORM 1 HISTORY",
+                "14:00-14:40": "FORM 2 PHYSICS",
+                "14:40-15:00": "FORM 3 AGRICULTURE",
+                "15:00-15:40": "FORM 4 MATHEMATICS",
+                "15:40-16:20": "FORM 2 BIOLOGY",
+                "16:20-17:00": "FORM 3 CHEMISTRY"
+            },
+            "Thursday": {
+                "08:00-08:40": "FORM 4 GEOGRAPHY",
+                "08:40-09:20": "FORM 3 HISTORY",
+                "09:20-10:00": "BREAK",
+                "10:00-10:40": "FORM 4",
+                "10:40-11:20": "FORM 1",
+                "11:20-12:00": "FORM 2",
+                "12:00-12:40": "FORM 3",
+                "12:40-13:20": "FORM 4",
+                "13:20-14:00": "FORM 1",
+                "14:00-14:40": "FORM 2",
+                "14:40-15:00": "FORM 3",
+                "15:00-15:40": "FORM 4",
+                "15:40-16:20": "FORM 2",
+                "16:20-17:00": "FORM 3"
+            },
+            "Sunday": {
+                "08:00-08:40": "FORM 4 GEOGRAPHY",
+                "08:40-09:20": "FORM 3 HISTORY",
+                "09:20-10:00": "BREAK",
+                "10:00-10:40": "FORM 4",
+                "10:40-11:20": "FORM 1",
+                "11:20-12:00": "FORM 2",
+                "12:00-12:40": "FORM 3",
+                "12:40-13:20": "FORM 4",
+                "13:20-14:00": "FORM 1",
+                "14:00-14:40": "FORM 2",
+                "14:40-15:00": "FORM 3",
+                "15:00-15:40": "FORM 4",
+                "15:40-16:20": "FORM 2",
+                "16:20-17:00": "FORM 3",
+                "17:00-17:40": "FORM 3",
+                "17:40-18:20": "FORM 4",
+                "18:20-19:00": "FORM 2",
+                "19:00-19:40": "FORM 3"
+            }
+        };
+
+        function getCurrentDayAndTime() {
+            const now = new Date();
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const currentDay = dayNames[now.getDay()];
+            const currentTime = now.toTimeString().slice(0, 5);
+            console.log(`Current Day: ${currentDay}, Current Time: ${currentTime}`);
+            return { currentDay, currentTime };
+        }
+
+        function checkTimetable() {
+            const { currentDay, currentTime } = getCurrentDayAndTime();
+            const announcementDiv = document.getElementById("announcement");
+
+            if (!(currentDay in timetable)) {
+                announcementDiv.textContent = "Invalid day!";
+                console.log("Invalid day!");
+                return;
+            }
+
+            const classes = timetable[currentDay];
+            let message = "No current class.";
+            for (const [timeRange, className] of Object.entries(classes)) {
+                const [startTime, endTime] = timeRange.split("-");
+                console.log(`Checking time range: ${timeRange}, Class: ${className}`);
+                if (startTime <= currentTime && currentTime <= endTime) {
+                    message = `On today ${currentDay}, you have ${className} from ${timeRange}. Please be punctual!`;
+                    speak(message);
+                    break;
+                }
+            }
+            console.log(`Announcement: ${message}`);
+            announcementDiv.textContent = message;
+        }
+
+        function speak(message) {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(message);
+                window.speechSynthesis.speak(msg);
+            } else {
+                console.error("Speech synthesis not supported.");
+                const announcementDiv = document.getElementById("announcement");
+                announcementDiv.textContent = "Speech synthesis not supported in this browser.";
+            }
+        }
+    </script>
+</body>
+</html>
