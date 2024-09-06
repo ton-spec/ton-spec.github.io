@@ -141,7 +141,7 @@
                 const [startTime, endTime] = timeRange.split("-");
                 console.log(`Checking time range: ${timeRange}, Class: ${className}`);
                 if (startTime <= currentTime && currentTime <= endTime) {
-                    message = `Tonny, on today ${currentDay}, you have ${className} from ${timeRange}. Please be punctual!`;
+                    message = `Tonny, on today ${currentDay}, you have ${className} from ${timeRange}. Please be alert!`;
                     speak(message);
                     break;
                 }
