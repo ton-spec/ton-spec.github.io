@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson Plan Generator - Tonny Mulati</title>
+  <!-- Link to Google Fonts for elegant fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+   
+
+/* Global Styles */
+html, body {
+  height: 100%; /* Ensure body and html take up the full height */
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212;
+  color: #f3f4f6;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  padding-top: 20px; /* Add padding to make sure content is visible */
+  width: 100%
+}
+
+.section h2 {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: scroll-right 10s linear infinite;
+            font-size: 20px;
+            color: #39FF14; /* Neon green color */
+            z-index: 990
+        }
+
+        @keyframes scroll-right {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+
+
+h1, h2, h3 {
+  font-family: 'Poppins', sans-serif;
+  color: #00f7ff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.container {
+  background-color: #1f1f1f;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+  border: 1px solid #333;
+  overflow: auto; /* Allow content to scroll */
+  flex-grow: 1; /* Allow the container to expand and fill the available space */
+}
+
+/* Section Style */
+.section {
+  margin-bottom: 15px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #d1d1d1;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #2c2f38;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin-top: 5px;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 255, 255, 0.2);
+}
+
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+  border-color: #00f7ff;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #00f7ff;
+  border: none;
+  border-radius: 8px;
+  color: #121212;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #008a99;
+  box-shadow: 0 6px 12px rgba(0, 255, 255, 0.5);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+}
+
+.lesson-development {
+  margin-top: 20px;
+  background-color: #292d36;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.subsection {
+  margin-bottom: 10px;
+  background-color: #333;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+}
+
+.subsection label {
+  font-size: 14px;
+  color: #b0b0b0;
+}
+
+.subsection textarea {
+  margin-bottom: 10px;
+}
+
+.subsection button {
+  background-color: #f04e23;
+}
+
+.subsection button:hover {
+  background-color: #e03b1d;
+}
+
+.lessonPlanDisplay {
+  background-color: #1f1f1f;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  margin-top: 30px;
+}
+
+.lessonPlanDisplay h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  color: #00f7ff;
+}
+
+.lessonPlanDisplay p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Neon Button Styles */
+.neon-button {
+  padding: 12px 30px;
+  background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #00f700, #00c7ff, #0000ff);
+  background-size: 400% 400%;
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  animation: glowing 20s ease-in-out infinite;
+}
+
+.neon-button:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  animation: glowing 1s ease-in-out infinite;
+}
+
+@keyframes glowing {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* Footer styling */
+    footer {
+      position: relative;
+      background-color: #f8f8f8;
+      background-color: #282c34;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+      margin-top: auto; /* Ensures footer stays at the bottom */
+      bottom: 0;
+      height:50px
+    }
+
+    footer a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: white;
+    }
+
+    footer img {
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+ 
+  <div class="container">
+    <h1> Tonny-Wanjala-Mulati Lesson-Plan Generator</h1>
+
+    <!-- Basic Information -->
+    <div class="section">
+      <label for="schoolName">School Name:</label>
+      <input type="text" id="schoolName" placeholder="Enter School Name">
+    </div>
+
+    <div class="section">
+      <label for="teacherName">Teacher's Name:</label>
+      <input type="text" id="teacherName" placeholder="Enter Teacher's Name">
+    </div>
+
+    <div class="section">
+      <label for="tscNumber">TSC Number:</label>
+      <input type="text" id="tscNumber" placeholder="Enter TSC Number">
+    </div>
+
+    <div class="section">
+      <label for="age">Age:</label>
+      <input type="number" id="age" placeholder="Enter Age">
+    </div>
+   <div class="section">
+      <label for="learningArea">Learning Area:</label>
+      <select id="learningArea">
+        <option value="Social Studies">Social Studies</option>
+        <option value="Kiswahili">Kiswahili</option>
+        <option value="Agriculture">Agriculture</option>
+        <option value="Creative Arts & Sports">Creative Arts & Sports</option>
+        <option value="Pretechnical Studies">Pretechnical Studies</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Christian Religious Education">Christian Religious Education</option>
+        <option value="Integrated Science">Integrated Science </option>
+        <option value="English">English</option>
+      </select>
+    </div>
+
+  
+   <div class="section">
+      <label for="grade">Grade:</label>
+      <select id="grade">
+        <option value="Nine">9</option>
+        <option value="Eight">8</option>
+        <option value="Seven">7</option>
+        <option value="Six">6</option>
+        <option value="Five">5</option>
+        <option value="Four">4</option>
+        <option value="Three">3</option>
+        <option value="Two">2</option>
+        <option value="One">1</option>
+      </select>
+    </div>
+
+
+
+
+    <div class="section">
+      <label for="lessonDate">Date:</label>
+      <input type="date" id="lessonDate">
+    </div>
+    
+      <div class="section">
+      <label for="term">Term:</label>
+      <select id="term">
+        <option value="Term 1">Term 1</option>
+        <option value="Term 2">Term 2</option>
+        <option value="Term 3">Term 3</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="classRoll">Class Roll:</label>
+      <input type="number" id="classRoll" placeholder="Enter Class Roll">
+    </div>
+
+    <div class="section">
+      <label for="sex">Sex:</label>
+      <select id="sex">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+
+    <!-- Strand and Substrand -->
+    <h2>Strand and Substrand</h2>
+    <div class="section">
+      <label for="strand">Strand:</label>
+      <input type="text" id="strand" placeholder="Enter Strand">
+    </div>
+
+    <div class="section">
+      <label for="substrand">Substrand:</label>
+      <input type="text" id="substrand" placeholder="Enter Substrand">
+    </div>
+
+    <div class="section">
+      <label for="specificLearningOutcomes">Specific Learning Outcomes:</label>
+      <textarea id="specificLearningOutcomes" placeholder="Enter Specific Learning Outcomes"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="keyInquiryQuestions">Key Inquiry Questions:</label>
+      <textarea id="keyInquiryQuestions" placeholder="Enter Key Inquiry Questions"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="learningResources">Learning Resources:</label>
+      <textarea id="learningResources" placeholder="Enter Learning Resources"></textarea>
+    </div>
+
+    <!-- Lesson Details -->
+    <h2>Lesson Plan Details</h2>
+
+    <div class="section">
+      <label for="introduction">Introduction:</label>
+      <textarea id="introduction" placeholder="Enter Introduction"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="introductionTime">Time Allotted (minutes):</label>
+      <input type="number" id="introductionTime" placeholder="Enter Time">
+    </div>
+
+    <h3>Lesson Development</h3>
+    <button onclick="addSubsection()">Add Subsection</button>
+
+    <div id="lessonDevelopment"></div>
+    <!-- Self Reflection and Conclusion -->
+    <div class="section">
+      <label for="selfReflection">Self Reflection:</label>
+      <textarea id="selfReflection" placeholder="Enter Self Reflection"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="conclusion">Conclusion:</label>
+      <textarea id="conclusion" placeholder="Enter Conclusion"></textarea>
+    </div>
+
+    <!-- Generate Buttons -->
+    <button onclick="displayLessonPlan()">Display Lesson Plan</button>
+    <button onclick="downloadTxtFile()">Download as TXT</button>
+  </div>
+
+  <div id="lessonPlanDisplay" style="white-space: pre-line;" class="container"></div>
+
+
+  <!-- Footer -->
+  <footer>
+   <section class="section">
+        <h2>Tonny Mulati Digital Solutions Portfolio. This App was build by Tonny Wanjala Mulati in December, 2024.</h2>
+        <!-- Resume Content Goes Here -->
+        <p><strong>About Me</strong></p>
+        <img src="https://github.com/ton-spec/ton-spec.github.io/blob/main/tonny.png?raw=true" alt="Tonny Wanjala Mulati" style="width: 100px; height: 100px; border-radius: 50%;"><br><br>
+        <p><strong>Name: </strong> <span style="color: #39FF14; font-family: Arial, sans-serif;">Tonny Wanjala Mulati</span></p>
+        <p><strong>Role: </strong>Web Developer and ICT Educator</p>
+        <p><strong>Institution: </strong>Mungakha A.C.K Junior Secondary School</p>
+        <p><strong>Specializations: </strong>Creating automated systems for education, including report card generators, automated timetables, and digital lesson planning templates.</p>
+        <p>For more details, visit<a style="color: #39FF14; font-family: Arial, sans-serif;" href="https://web.facebook.com/TonnyMulatiDigitalSolutions">Tonny Mulati Digital Solutions</a></p>
+        <p><strong>Phone: </strong><span style="color: #39FF14; font-family: Arial, sans-serif;">+254703426340</span></p>
+        <p><strong>Email: </strong><span ><a style="color: #39FF14; font-family: Arial, sans-serif;" href="mailto:tonnymulati79@gmail.com">tonnymulati79@gmail.com</a></p>
+      </section>
+
+
+
+
+
+
+    <p>&copy; 2024 Tonny Wanjala Mulati. All rights reserved.</p>
+    <div>
+      <a href="https://web.facebook.com/TonnyMulatiDigitalSolutions" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
+      <a href="https://twitter.com/tonnymulati" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Twitter_Logo_As_of_2021.svg" alt="X"></a>
+      <a href="https://www.linkedin.com/in/tonnymulati" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo_2023.svg" alt="LinkedIn"></a>
+      <a href="https://github.com/ton-spec" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub"></a>
+    </div>
+  </footer>
+  <script>
+// Add a new subsection dynamically
+function addSubsection() {
+  const section = document.createElement("div");
+  section.classList.add("subsection");
+
+  section.innerHTML = `
+    <label>Subsection:</label>
+    <textarea class="subActivity" placeholder="Activity details"></textarea>
+    <label>Time Allotted (minutes):</label>
+    <select class="subsectionTime">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+    </select>
+    <button onclick="removeSubsection(this)">Remove</button>
+  `;
+
+  document.getElementById("lessonDevelopment").appendChild(section);
+}
+
+// Remove a subsection
+function removeSubsection(button) {
+  button.parentElement.remove();
+}
+
+// Display lesson plan on the webpage
+function displayLessonPlan() {
+  const schoolName = document.getElementById("schoolName").value || "Not provided";
+  const teacherName = document.getElementById("teacherName").value || "Not provided";
+  const tscNumber = document.getElementById("tscNumber").value || "Not provided";
+  const age = document.getElementById("age").value || "Not provided";
+  const learningArea = document.getElementById("learningArea").value || "Not provided";
+  const grade = document.getElementById("grade").value || "Not provided";
+  const term = document.getElementById("term").value || "Not provided";
+  const lessonDate = document.getElementById("lessonDate").value || "Not provided";
+  const classRoll = document.getElementById("classRoll").value || "Not provided";
+  const sex = document.getElementById("sex").value || "Not provided";
+
+  const strand = document.getElementById("strand").value || "Not provided";
+  const substrand = document.getElementById("substrand").value || "Not provided";
+  const specificLearningOutcomes = document.getElementById("specificLearningOutcomes").value || "Not provided";
+  const keyInquiryQuestions = document.getElementById("keyInquiryQuestions").value || "Not provided";
+  const learningResources = document.getElementById("learningResources").value || "Not provided";
+
+  const introduction = document.getElementById("introduction").value || "Not provided";
+  const introductionTime = document.getElementById("introductionTime").value || "Not provided";
+
+  const subsections = document.querySelectorAll(".subsection");
+  const lessonDetails = [];
+  subsections.forEach((section) => {
+    const activity = section.querySelector(".subActivity").value || "Not provided";
+    const time = section.querySelector(".subsectionTime").value || "Not provided";
+    lessonDetails.push({ activity, time });
+  });
+
+  const selfReflection = document.getElementById("selfReflection").value || "Not provided";
+  const conclusion = document.getElementById("conclusion").value || "Not provided";
+
+  let lessonPlanHtml = `
+    <h2>Lesson Plan</h2>
+    <p><strong>School Name:</strong> ${schoolName}</p>
+    <p><strong>Teacher's Name:</strong> ${teacherName}</p>
+    <p><strong>TSC Number:</strong> ${tscNumber}</p>
+    <p><strong>Age:</strong> ${age}</p>
+    <p><strong>Learning Area:</strong> ${learningArea}</p>
+    <p><strong>Grade:</strong> ${grade}</p>
+    <p><strong>Term:</strong> ${term}</p>
+    <p><strong>Date:</strong> ${lessonDate}</p>
+    <p><strong>Class Roll:</strong> ${classRoll}</p>
+    <p><strong>Sex:</strong> ${sex}</p>
+
+    <h3>Strand and Substrand</h3>
+    <p><strong>Strand:</strong> ${strand}</p>
+    <p><strong>Substrand:</strong> ${substrand}</p>
+
+    <h3>Specific Learning Outcomes</h3>
+    <p>${specificLearningOutcomes}</p>
+
+    <h3>Key Inquiry Questions</h3>
+    <p>${keyInquiryQuestions}</p>
+
+    <h3>Learning Resources</h3>
+    <p>${learningResources}</p>
+
+    <h3>Introduction</h3>
+    <p>${introduction} (Time: ${introductionTime} minutes)</p>
+
+    <h3>Lesson Development</h3>`;
+
+  lessonDetails.forEach((detail, index) => {
+    lessonPlanHtml += `
+      <p><strong>Subsection ${index + 1}:</strong> ${detail.activity} (Time: ${detail.time} minutes)</p>`;
+  });
+
+  lessonPlanHtml += `
+    <h3>Self Reflection</h3>
+    <p>${selfReflection}</p>
+
+    <h3>Conclusion</h3>
+    <p>${conclusion}</p>`;
+
+  document.getElementById("lessonPlanDisplay").innerHTML = lessonPlanHtml;
+}
+
+// Download lesson plan as a text file
+function downloadTxtFile() {
+  const planContent = document.getElementById("lessonPlanDisplay").innerText;
+  const blob = new Blob([planContent], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Lesson_Plan.txt";
+  link.click();
+}
+
+
+</script>
+</body>
+</html>
