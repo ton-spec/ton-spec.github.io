@@ -367,6 +367,11 @@ button:focus {
       <label for="conclusion">Conclusion:</label>
       <textarea id="conclusion" placeholder="Enter Conclusion"></textarea>
     </div>
+ <div class="section">
+      <label for="extended">Extended Activities:</label>
+      <textarea id="extended" placeholder="Enter Extended Activities"></textarea>
+    </div>
+    
 
     <!-- Generate Buttons -->
     <button onclick="displayLessonPlan()">Display Lesson Plan</button>
@@ -465,6 +470,7 @@ function displayLessonPlan() {
 
   const selfReflection = document.getElementById("selfReflection").value || "Not provided";
   const conclusion = document.getElementById("conclusion").value || "Not provided";
+  const conclusion = document.getElementById("extended").value || "Not provided";
 
   let lessonPlanHtml = `
     <h2>Lesson Plan</h2>
