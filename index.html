@@ -290,6 +290,18 @@ button:focus {
       <label for="lessonDate">Date:</label>
       <input type="date" id="lessonDate">
     </div>
+
+  
+   <div class="section">
+      <label for="startTime">Start Time:</label>
+      <input type="time" id="startTime">
+    </div>
+
+
+   <div class="section">
+      <label for="stopTime">Stop Time:</label>
+      <input type="time" id="stopTime">
+    </div>
     
       <div class="section">
       <label for="term">Term:</label>
@@ -367,12 +379,20 @@ button:focus {
       <label for="conclusion">Conclusion:</label>
       <textarea id="conclusion" placeholder="Enter Conclusion"></textarea>
     </div>
- <div class="section">
+
+
+
+  <div class="section">
       <label for="extended">Extended Activities:</label>
       <textarea id="extended" placeholder="Enter Extended Activities"></textarea>
     </div>
-    
 
+
+
+  <div class="section">
+      <label for="evaluation">Self Evaluation:</label>
+      <textarea id="evaluation" placeholder="Leave this field blank!"></textarea>
+    </div>
     <!-- Generate Buttons -->
     <button onclick="displayLessonPlan()">Display Lesson Plan</button>
     <button onclick="downloadTxtFile()">Download as TXT</button>
@@ -448,6 +468,9 @@ function displayLessonPlan() {
   const grade = document.getElementById("grade").value || "Not provided";
   const term = document.getElementById("term").value || "Not provided";
   const lessonDate = document.getElementById("lessonDate").value || "Not provided";
+  const startTime = document.getElementById("startTime").value || "Not provided";
+  const stopTime = document.getElementById("stopTime").value || "Not provided";
+
   const classRoll = document.getElementById("classRoll").value || "Not provided";
   const sex = document.getElementById("sex").value || "Not provided";
 
@@ -471,6 +494,8 @@ function displayLessonPlan() {
   const selfReflection = document.getElementById("selfReflection").value || "Not provided";
   const conclusion = document.getElementById("conclusion").value || "Not provided";
   const extended = document.getElementById("extended").value || "Not provided";
+  const evaluation = document.getElementById("evaluation").value || "......................................................................................................................................................................";
+
 
   let lessonPlanHtml = `
     <h2>Lesson Plan</h2>
@@ -482,6 +507,8 @@ function displayLessonPlan() {
     <p><strong>Grade:</strong> ${grade}</p>
     <p><strong>Term:</strong> ${term}</p>
     <p><strong>Date:</strong> ${lessonDate}</p>
+    <p><strong>Start Time:</strong> ${startTime}</p>
+    <p><strong>Stop Time:</strong> ${stopTime}</p>
     <p><strong>Class Roll:</strong> ${classRoll}</p>
     <p><strong>Sex:</strong> ${sex}</p>
 
@@ -514,9 +541,12 @@ function displayLessonPlan() {
 
     <h3>Conclusion</h3>
     <p>${conclusion}</p>
-    
-   <h3>Extended Activities</h3>
-   <p>${extended}</p>`;
+
+    <h3>Extended Activities</h3>
+    <p>${extended}</p>
+
+    <h3>Self Evaluation</h3>
+    <p>${evaluation}</p>`;
 
   document.getElementById("lessonPlanDisplay").innerHTML = lessonPlanHtml;
 }
