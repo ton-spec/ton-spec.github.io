@@ -9,15 +9,26 @@
 
   <style>
    
-
 /* Global Styles */
+:root {
+  --primary-color: #00f7ff;
+  --secondary-color: #39FF14;
+  --background-color: #121212;
+  --foreground-color: #f3f4f6;
+  --container-bg: #1f1f1f;
+  --input-bg: #2c2f38;
+  --input-focus-shadow: rgba(0, 255, 255, 0.7);
+  --btn-hover-color: #008a99;
+  --neon-gradient: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #00f700, #00c7ff, #0000ff);
+}
+
 html, body {
-  height: 100%; /* Ensure body and html take up the full height */
+  height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: #121212;
-  color: #f3f4f6;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -25,41 +36,35 @@ html, body {
 }
 
 body {
-  overflow-x: hidden; /* Prevent horizontal scroll */
-  padding-top: 20px; /* Add padding to make sure content is visible */
-  width: 100%
+  overflow-x: hidden;
+  padding-top: 20px;
+  width: 100%;
 }
 
 .section h2 {
-            display: inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            animation: scroll-right 10s linear infinite;
-            font-size: 20px;
-            color: #39FF14; /* Neon green color */
-            z-index: 990
-        }
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: scroll-right 10s linear infinite;
+  font-size: 20px;
+  color: var(--secondary-color);
+  z-index: 990;
+}
 
-        @keyframes scroll-right {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(100%);
-            }
-        }
-
-
+@keyframes scroll-right {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
 
 h1, h2, h3 {
   font-family: 'Poppins', sans-serif;
-  color: #00f7ff;
+  color: var(--primary-color);
   text-align: center;
   margin-bottom: 20px;
 }
 
 .container {
-  background-color: #1f1f1f;
+  background-color: var(--container-bg);
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
@@ -67,11 +72,10 @@ h1, h2, h3 {
   max-width: 800px;
   margin-top: 20px;
   border: 1px solid #333;
-  overflow: auto; /* Allow content to scroll */
-  flex-grow: 1; /* Allow the container to expand and fill the available space */
+  overflow: auto;
+  flex-grow: 1;
 }
 
-/* Section Style */
 .section {
   margin-bottom: 15px;
 }
@@ -86,24 +90,25 @@ input, select, textarea {
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  background-color: #2c2f38;
+  background-color: var(--input-bg);
   color: #fff;
   border: none;
   border-radius: 8px;
   margin-top: 5px;
   outline: none;
   box-shadow: 0 4px 6px rgba(0, 255, 255, 0.2);
+  transition: box-shadow 0.3s ease;
 }
 
 input:focus, select:focus, textarea:focus {
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
-  border-color: #00f7ff;
+  box-shadow: 0 0 12px var(--input-focus-shadow);
+  border-color: var(--primary-color);
 }
 
 button {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #00f7ff;
+  background-color: var(--primary-color);
   border: none;
   border-radius: 8px;
   color: #121212;
@@ -113,70 +118,18 @@ button {
 }
 
 button:hover {
-  background-color: #008a99;
+  background-color: var(--btn-hover-color);
   box-shadow: 0 6px 12px rgba(0, 255, 255, 0.5);
 }
 
 button:focus {
   outline: none;
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+  box-shadow: 0 0 12px var(--input-focus-shadow);
 }
 
-.lesson-development {
-  margin-top: 20px;
-  background-color: #292d36;
-  border-radius: 8px;
-  padding: 10px;
-}
-
-.subsection {
-  margin-bottom: 10px;
-  background-color: #333;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
-}
-
-.subsection label {
-  font-size: 14px;
-  color: #b0b0b0;
-}
-
-.subsection textarea {
-  margin-bottom: 10px;
-}
-
-.subsection button {
-  background-color: #f04e23;
-}
-
-.subsection button:hover {
-  background-color: #e03b1d;
-}
-
-.lessonPlanDisplay {
-  background-color: #1f1f1f;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-  margin-top: 30px;
-}
-
-.lessonPlanDisplay h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  color: #00f7ff;
-}
-
-.lessonPlanDisplay p {
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-/* Neon Button Styles */
 .neon-button {
   padding: 12px 30px;
-  background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #00f700, #00c7ff, #0000ff);
+  background: var(--neon-gradient);
   background-size: 400% 400%;
   color: #fff;
   font-weight: bold;
@@ -199,32 +152,40 @@ button:focus {
   100% { background-position: 0% 50%; }
 }
 
+footer {
+  background-color: #282c34;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  margin-top: auto;
+  bottom: 0;
+  height: 50px;
+}
 
+footer a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: white;
+}
 
-/* Footer styling */
-    footer {
-      position: relative;
-      background-color: #f8f8f8;
-      background-color: #282c34;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      width: 100%;
-      margin-top: auto; /* Ensures footer stays at the bottom */
-      bottom: 0;
-      height:50px
-    }
+footer img {
+  width: 30px;
+  height: 30px;
+}
 
-    footer a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: white;
-    }
-
-    footer img {
-      width: 30px;
-      height: 30px;
-    }
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+  input, select, textarea {
+    font-size: 14px;
+  }
+  button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
   </style>
 </head>
 <body>
