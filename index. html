@@ -167,7 +167,7 @@
 <body>
 
 <div id="loader">
-  <h2>INITIALISING SOLAR SYSTEM</h2>
+  <h2>INITIALISING THE SOLAR SYSTEM</h2>
   <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
   <div id="loader-sub">LOADING PLANETARY DATA...</div>
 </div>
