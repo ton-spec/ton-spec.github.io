@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internal Land Forming Processes — 3D Geophysics Simulation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap');
+
+:root {
+  --gold:    #c8a84b;
+  --amber:   #e67e22;
+  --rust:    #9b4a1b;
+  --earth:   #5c3d1e;
+  --stone:   #8c7a6b;
+  --slate:   #1a1a2e;
+  --panel:   rgba(10,8,5,0.88);
+  --border:  rgba(200,168,75,0.25);
+  --text:    #d4c5a9;
+  --bright:  #f0e6cc;
+  --mono:    'Share Tech Mono', monospace;
+  --sans:    'Barlow Condensed', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: #0a0806;
+  overflow: hidden;
+  font-family: var(--sans);
+  color: var(--text);
+  cursor: default;
+}
+
+#scene-container {
+  position: fixed; inset: 0;
+  z-index: 1;
+}
+#scene-container canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* ── CSS2D Label Layer ── */
+.label-2d {
+  position: absolute;
+  padding: 4px 10px;
+  background: rgba(10,8,5,0.82);
+  border: 1px solid var(--gold);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  pointer-events: none;
+  white-space: nowrap;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.5s;
+  text-shadow: 0 0 8px rgba(200,168,75,0.6);
+}
+.label-2d.visible { opacity: 1; }
+.label-2d::before {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  border: 3px solid transparent;
+  border-top-color: var(--gold);
+}
+
+/* ── HUD Shell ── */
+#hud {
+  position: fixed; inset: 0; z-index: 10;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: 300px 1fr 260px;
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+}
+
+/* ── Top Bar ── */
+#top-bar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px 12px;
+  background: linear-gradient(180deg, rgba(10,8,5,0.96) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+  pointer-events: all;
+}
+#top-bar h1 {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: clamp(13px, 1.6vw, 19px);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--bright);
+}
+#top-bar h1 span { color: var(--gold); }
+.mode-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--stone);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+#active-mode-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  min-width: 200px;
+  text-align: center;
+}
+
+/* ── Left Panel ── */
+#left-panel {
+  grid-column: 1;
+  grid-row: 2;
+  padding: 16px 16px 0;
+  display: flex; flex-direction: column; gap: 10px;
+  pointer-events: all;
+  align-self: start;
+}
+
+.panel-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.panel-section-header {
+  padding: 7px 14px;
+  font-size: 9px;
+  font-family: var(--mono);
+  letter-spacing: 3px;
+  color: var(--stone);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  background: rgba(200,168,75,0.04);
+}
+.panel-section-header .dot {
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; margin-right: 8px; background: var(--stone);
+  vertical-align: middle;
+}
+
+/* Force buttons */
+.force-group { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.force-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid rgba(200,168,75,0.2);
+  border-radius: 3px;
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text);
+  text-transform: uppercase;
+}
+.force-btn:hover {
+  border-color: var(--gold);
+  background: rgba(200,168,75,0.06);
+  color: var(--bright);
+}
+.force-btn.active {
+  border-color: var(--gold);
+  background: rgba(200,168,75,0.12);
+  color: var(--gold);
+}
+.force-btn .icon {
+  width: 28px; height: 28px;
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.force-btn.tensional .icon  { background: rgba(231,76,60,0.15);  border: 1px solid rgba(231,76,60,0.3); }
+.force-btn.compress .icon   { background: rgba(52,152,219,0.15); border: 1px solid rgba(52,152,219,0.3); }
+.force-btn.shear .icon      { background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.3); }
+.force-btn.vertical .icon   { background: rgba(155,89,182,0.15); border: 1px solid rgba(155,89,182,0.3); }
+.force-btn .sub {
+  font-size: 9px; font-family: var(--mono);
+  color: var(--stone); margin-top: 2px;
+  letter-spacing: 1px;
+}
+
+/* Sub-mode buttons */
+.submode-group { padding: 8px 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.sub-btn {
+  padding: 5px 10px;
+  border: 1px solid rgba(200,168,75,0.2);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 9px; letter-spacing: 1px;
+  color: var(--stone);
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.sub-btn:hover { border-color: var(--gold); color: var(--text); }
+.sub-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(200,168,75,0.08); }
+
+/* Magnitude slider */
+.slider-group { padding: 12px 14px; }
+.slider-label {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--stone);
+  margin-bottom: 8px;
+}
+.slider-label span { color: var(--gold); }
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--rust));
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--gold); cursor: pointer;
+  border: 2px solid var(--slate);
+  box-shadow: 0 0 6px rgba(200,168,75,0.8);
+}
+
+/* Animate / Reset */
+.action-group { padding: 10px; display: flex; gap: 6px; }
+.action-btn {
+  flex: 1; padding: 9px 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(200,168,75,0.06);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--gold); text-transform: uppercase;
+  transition: all 0.2s;
+}
+.action-btn:hover { background: rgba(200,168,75,0.15); border-color: var(--gold); }
+.action-btn.primary {
+  background: rgba(200,168,75,0.12);
+  border-color: var(--gold);
+}
+.action-btn.primary:hover { background: rgba(200,168,75,0.25); }
+
+/* ── Right Panel (Info) ── */
+#right-panel {
+  grid-column: 3;
+  grid-row: 2;
+  padding: 16px 16px 0;
+  display: flex; flex-direction: column; gap: 10px;
+  pointer-events: all;
+  align-self: start;
+}
+.info-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+}
+.info-card h3 {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: 3px;
+  color: var(--gold); margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.info-card p {
+  font-size: 13px; line-height: 1.7;
+  color: var(--stone); font-weight: 300;
+  letter-spacing: 0.3px;
+}
+.info-card .landform-name {
+  font-family: var(--sans);
+  font-size: 18px; font-weight: 700;
+  color: var(--bright); margin-bottom: 6px;
+  letter-spacing: 2px;
+}
+.vocab-list { margin-top: 8px; }
+.vocab-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-bottom: 6px; font-size: 12px;
+}
+.vocab-item .term {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--gold); letter-spacing: 1px;
+  background: rgba(200,168,75,0.08);
+  padding: 2px 6px; border-radius: 2px;
+  white-space: nowrap; margin-top: 1px;
+}
+.vocab-item .def { color: var(--stone); line-height: 1.5; }
+
+/* ── Bottom Bar ── */
+#bottom-bar {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: flex; align-items: center; justify-content: center; gap: 24px;
+  padding: 10px 24px;
+  background: linear-gradient(0deg, rgba(10,8,5,0.96) 0%, transparent 100%);
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: 2px; color: var(--stone);
+}
+.hint { display: flex; align-items: center; gap: 6px; }
+.key {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 3px; padding: 2px 7px;
+  font-size: 9px; color: #888;
+}
+
+/* ── Axis Indicator ── */
+#axis-legend {
+  position: fixed; bottom: 48px; right: 16px;
+  z-index: 12; pointer-events: none;
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 2px; color: var(--stone);
+  text-align: right; line-height: 2;
+}
+
+/* ── Author Card ── */
+#author-card {
+  pointer-events: all;
+  border-color: rgba(200,168,75,0.4);
+  background: linear-gradient(135deg, rgba(10,8,5,0.95) 0%, rgba(30,20,8,0.95) 100%);
+}
+.author-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--rust));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--sans);
+  font-size: 18px; font-weight: 900;
+  color: #fff;
+  margin-bottom: 10px;
+  box-shadow: 0 0 16px rgba(200,168,75,0.35);
+  letter-spacing: 1px;
+}
+.author-name {
+  font-family: var(--sans);
+  font-size: 16px; font-weight: 700;
+  color: var(--bright);
+  letter-spacing: 1.5px;
+  margin-bottom: 3px;
+}
+.author-title {
+  font-family: var(--mono);
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--gold); text-transform: uppercase;
+  margin-bottom: 0;
+}
+.author-divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 12px 0;
+}
+.author-contact { display: flex; flex-direction: column; gap: 7px; }
+.contact-row {
+  display: flex; align-items: center; gap: 9px;
+}
+.contact-icon {
+  font-size: 12px; width: 18px; text-align: center; flex-shrink: 0;
+}
+.contact-link {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: 0.8px;
+  color: var(--stone);
+  text-decoration: none;
+  transition: color 0.2s;
+  word-break: break-all;
+}
+.contact-link:hover { color: var(--gold); text-decoration: underline; }
+
+/* ── Bottom Credits ── */
+.bottom-credit { display: flex; align-items: center; gap: 7px; }
+.bottom-author {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.bottom-sep { color: #333; }
+.bottom-link {
+  font-family: var(--mono);
+  font-size: 9px; letter-spacing: 0.5px;
+  color: var(--stone);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.bottom-link:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div id="scene-container"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <!-- TOP -->
+  <div id="top-bar">
+    <h1>⛰ Internal Land Forming <span>Processes</span></h1>
+    <div id="active-mode-label">SELECT A FORCE TYPE →</div>
+    <div class="mode-badge">3D GEOPHYSICS SIMULATION &nbsp;·&nbsp; <span style="color:var(--gold)">T. W. MULATI</span></div>
+  </div>
+
+  <!-- LEFT PANEL -->
+  <div id="left-panel">
+
+    <!-- Horizontal Forces -->
+    <div class="panel-section">
+      <div class="panel-section-header"><span class="dot" style="background:#e74c3c"></span>Horizontal Forces</div>
+      <div class="force-group">
+        <button class="force-btn tensional" data-mode="tensional">
+          <div class="icon">↔</div>
+          <div><div>Tensional Forces</div><div class="sub">Normal Faulting · Rift Valley</div></div>
+        </button>
+        <button class="force-btn compress" data-mode="compression">
+          <div class="icon">↤↦</div>
+          <div><div>Compressional Forces</div><div class="sub">Folding · Reverse Faulting</div></div>
+        </button>
+        <button class="force-btn shear" data-mode="shear">
+          <div class="icon">⇅</div>
+          <div><div>Shear Forces</div><div class="sub">Transform Faulting</div></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Compression Sub-modes -->
+    <div class="panel-section" id="compress-sub" style="display:none">
+      <div class="panel-section-header"><span class="dot" style="background:#3498db"></span>Compression Mode</div>
+      <div class="submode-group">
+        <button class="sub-btn active" data-sub="folding">Folding</button>
+        <button class="sub-btn" data-sub="reverse_fault">Reverse/Thrust</button>
+      </div>
+    </div>
+
+    <!-- Vertical Forces -->
+    <div class="panel-section">
+      <div class="panel-section-header"><span class="dot" style="background:#9b59b6"></span>Vertical Movements</div>
+      <div class="force-group">
+        <button class="force-btn vertical" data-mode="upwarping">
+          <div class="icon">▲</div>
+          <div><div>Upwarping</div><div class="sub">Doming · Batholith Uplift</div></div>
+        </button>
+        <button class="force-btn vertical" data-mode="downwarping">
+          <div class="icon">▽</div>
+          <div><div>Downwarping</div><div class="sub">Basin · Geosyncline</div></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Magnitude -->
+    <div class="panel-section">
+      <div class="panel-section-header"><span class="dot" style="background:#c8a84b"></span>Force Magnitude</div>
+      <div class="slider-group">
+        <div class="slider-label">MAGNITUDE <span id="mag-val">50%</span></div>
+        <input type="range" id="magnitude" min="0" max="100" value="50">
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="panel-section">
+      <div class="action-group">
+        <button class="action-btn primary" id="btn-animate">▶ ANIMATE</button>
+        <button class="action-btn" id="btn-reset">↺ RESET</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div id="right-panel">
+    <div class="info-card" id="info-card">
+      <h3>// Landform Info</h3>
+      <div class="landform-name" id="info-title">—</div>
+      <p id="info-desc">Select a force type and press Animate to observe internal land-forming processes in 3D.</p>
+      <div class="vocab-list" id="vocab-list"></div>
+    </div>
+
+    <div class="info-card">
+      <h3>// Force Vector</h3>
+      <p id="force-desc" style="font-size:12px; line-height:1.8">
+        Tectonic forces originate from convection currents in the Earth's mantle. Choose a force type to begin simulation.
+      </p>
+    </div>
+
+    <!-- Author Card -->
+    <div class="info-card" id="author-card">
+      <h3>// Educator</h3>
+      <div class="author-avatar">TM</div>
+      <div class="author-name">Tonny Wanjala Mulati</div>
+      <div class="author-title">Geography Teacher</div>
+      <div class="author-divider"></div>
+      <div class="author-contact">
+        <div class="contact-row">
+          <span class="contact-icon">📱</span>
+          <a href="tel:+254703426340" class="contact-link">+254 703 426 340</a>
+        </div>
+        <div class="contact-row">
+          <span class="contact-icon">✉</span>
+          <a href="mailto:tonnymulati79@gmail.com" class="contact-link">tonnymulati79@gmail.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div id="bottom-bar">
+    <div class="hint"><span class="key">DRAG</span> Orbit</div>
+    <div class="hint"><span class="key">SCROLL</span> Zoom</div>
+    <div class="hint"><span class="key">RIGHT-DRAG</span> Pan</div>
+    <div class="hint" style="color:#333">|</div>
+    <div class="hint">Click a force → Set magnitude → Animate</div>
+    <div class="hint" style="color:#333">|</div>
+    <div class="hint bottom-credit">
+      <span class="bottom-author">Tonny Wanjala Mulati</span>
+      <span class="bottom-sep">·</span>
+      <a href="tel:+254703426340" class="bottom-link">+254 703 426 340</a>
+      <span class="bottom-sep">·</span>
+      <a href="mailto:tonnymulati79@gmail.com" class="bottom-link">tonnymulati79@gmail.com</a>
+    </div>
+  </div>
+</div>
+
+<div id="axis-legend"></div>
+
+<!-- Three.js r128 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════════════════════
+//  GEOPHYSICS SIMULATION ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── Renderer & Scene ────────────────────────────────────────────────────────
+const container = document.getElementById('scene-container');
+const renderer  = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.setClearColor(0x0a0806);
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0806, 0.012);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(12, 10, 18);
+camera.lookAt(0, 0, 0);
+
+// ── Lighting ────────────────────────────────────────────────────────────────
+const sun = new THREE.DirectionalLight(0xfff5e8, 2.2);
+sun.position.set(20, 30, 10);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.near   = 0.5;
+sun.shadow.camera.far    = 100;
+sun.shadow.camera.left   = -20;
+sun.shadow.camera.right  =  20;
+sun.shadow.camera.top    =  20;
+sun.shadow.camera.bottom = -20;
+sun.shadow.bias = -0.0003;
+scene.add(sun);
+scene.add(new THREE.AmbientLight(0x3a3020, 0.8));
+const fillLight = new THREE.DirectionalLight(0x204060, 0.4);
+fillLight.position.set(-10, 5, -10);
+scene.add(fillLight);
+const hemi = new THREE.HemisphereLight(0x6080a0, 0x3d2810, 0.5);
+scene.add(hemi);
+
+// ── Orbit Controls (inline) ─────────────────────────────────────────────────
+(function attachOrbitControls() {
+  let isDrag = false, isRightDrag = false;
+  let prev = { x: 0, y: 0 };
+  let sph  = { theta: 0.6, phi: 0.9, r: 22 };
+  let panOffset = new THREE.Vector3();
+  let target = new THREE.Vector3(0, 0, 0);
+
+  function applyCamera() {
+    camera.position.set(
+      target.x + sph.r * Math.sin(sph.phi) * Math.sin(sph.theta),
+      target.y + sph.r * Math.cos(sph.phi),
+      target.z + sph.r * Math.sin(sph.phi) * Math.cos(sph.theta)
+    );
+    camera.lookAt(target);
+  }
+  applyCamera();
+
+  renderer.domElement.addEventListener('mousedown', e => {
+    if (e.button === 2) isRightDrag = true;
+    else isDrag = true;
+    prev = { x: e.clientX, y: e.clientY };
+  });
+  window.addEventListener('mouseup', () => { isDrag = false; isRightDrag = false; });
+  window.addEventListener('mousemove', e => {
+    const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+    if (isDrag) {
+      sph.theta -= dx * 0.006;
+      sph.phi   = Math.max(0.05, Math.min(Math.PI - 0.05, sph.phi + dy * 0.006));
+      applyCamera();
+    }
+    if (isRightDrag) {
+      const right = new THREE.Vector3(); camera.getWorldDirection(right);
+      const up    = new THREE.Vector3(0, 1, 0);
+      right.cross(up).normalize();
+      target.addScaledVector(right, -dx * 0.015);
+      target.y += dy * 0.015;
+      applyCamera();
+    }
+    prev = { x: e.clientX, y: e.clientY };
+  });
+  renderer.domElement.addEventListener('wheel', e => {
+    sph.r = Math.max(5, Math.min(80, sph.r + e.deltaY * 0.025));
+    applyCamera();
+  }, { passive: true });
+  renderer.domElement.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Touch
+  let lt = null, lpd = 0;
+  renderer.domElement.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) { isDrag = true; lt = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }
+    if (e.touches.length === 2) lpd = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  }, { passive: true });
+  renderer.domElement.addEventListener('touchend', () => { isDrag = false; }, { passive: true });
+  renderer.domElement.addEventListener('touchmove', e => {
+    if (e.touches.length === 1 && lt) {
+      const dx = e.touches[0].clientX - lt.x, dy = e.touches[0].clientY - lt.y;
+      sph.theta -= dx * 0.007; sph.phi = Math.max(0.05, Math.min(Math.PI - 0.05, sph.phi + dy * 0.007));
+      lt = { x: e.touches[0].clientX, y: e.touches[0].clientY }; applyCamera();
+    }
+    if (e.touches.length === 2) {
+      const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      sph.r = Math.max(5, Math.min(80, sph.r - (d - lpd) * 0.05)); lpd = d; applyCamera();
+    }
+  }, { passive: true });
+})();
+
+// ── CSS2D Label Renderer ─────────────────────────────────────────────────────
+class CSS2DRenderer {
+  constructor() {
+    this.domElement = document.createElement('div');
+    this.domElement.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;';
+    container.appendChild(this.domElement);
+    this._objects = [];
+  }
+  add(label3d) { this._objects.push(label3d); this.domElement.appendChild(label3d.element); }
+  removeAll() {
+    this._objects.forEach(o => { if (o.element.parentNode) o.element.parentNode.removeChild(o.element); });
+    this._objects = [];
+  }
+  render(scene, camera) {
+    const W = window.innerWidth, H = window.innerHeight;
+    this._objects.forEach(obj => {
+      const pos = obj.position.clone().project(camera);
+      const x = (pos.x * 0.5 + 0.5) * W;
+      const y = (-(pos.y * 0.5) + 0.5) * H;
+      if (pos.z < 1) {
+        obj.element.style.transform = `translate(-50%,-100%) translate(${x}px,${y}px)`;
+        obj.element.style.display = 'block';
+      } else {
+        obj.element.style.display = 'none';
+      }
+    });
+  }
+}
+
+class CSS2DObject {
+  constructor(element) { this.element = element; this.position = new THREE.Vector3(); }
+}
+
+const labelRenderer = new CSS2DRenderer();
+
+// ─── TEXTURE GENERATORS ──────────────────────────────────────────────────────
+function makeCanvas(w, h, fn) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  fn(c.getContext('2d'), w, h);
+  return new THREE.CanvasTexture(c);
+}
+
+// Stratified rock texture (visible layers)
+function makeStratifiedTexture(w = 512, h = 256, palette) {
+  palette = palette || [
+    '#5c3d1e','#7a5230','#4a3018','#8c6840','#3a2510',
+    '#6a4828','#9a7850','#2e1a0a','#704020','#b09070'
+  ];
+  return makeCanvas(w, h, (ctx) => {
+    // Base
+    ctx.fillStyle = palette[0]; ctx.fillRect(0, 0, w, h);
+    // Strata layers
+    const nLayers = 14 + Math.floor(Math.random() * 6);
+    for (let i = 0; i < nLayers; i++) {
+      const y = (i / nLayers) * h;
+      const lh = (h / nLayers) * (0.6 + Math.random() * 0.8);
+      ctx.fillStyle = palette[i % palette.length];
+      ctx.globalAlpha = 0.7 + Math.random() * 0.3;
+      // Wavy layer edge
+      ctx.beginPath(); ctx.moveTo(0, y);
+      for (let x = 0; x <= w; x += 12) {
+        ctx.lineTo(x, y + (Math.random() - 0.5) * 4);
+      }
+      ctx.lineTo(w, y + lh); ctx.lineTo(0, y + lh); ctx.closePath();
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // Noise
+    for (let i = 0; i < 3000; i++) {
+      ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.12})`;
+      ctx.fillRect(Math.random()*w, Math.random()*h, 1+Math.random()*2, 1);
+    }
+    // Thin fault lines
+    for (let i = 0; i < 3; i++) {
+      const x = Math.random() * w;
+      ctx.strokeStyle = `rgba(20,10,5,0.4)`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + (Math.random()-0.5)*20, h); ctx.stroke();
+    }
+  });
+}
+
+function makeTopTexture(w = 512, h = 512) {
+  return makeCanvas(w, h, (ctx) => {
+    const g = ctx.createLinearGradient(0,0,w,h);
+    g.addColorStop(0,'#5a7a3a'); g.addColorStop(0.4,'#4a6a2a'); g.addColorStop(1,'#3a5020');
+    ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+    for (let i = 0; i < 2000; i++) {
+      ctx.fillStyle = `rgba(${Math.random()>0.5?80:30},${50+Math.random()*40},10,0.15)`;
+      ctx.fillRect(Math.random()*w, Math.random()*h, 2+Math.random()*4, 2+Math.random()*4);
+    }
+  });
+}
+
+function makeGroundTexture() {
+  return makeCanvas(1024, 1024, (ctx) => {
+    ctx.fillStyle = '#1a1208'; ctx.fillRect(0,0,1024,1024);
+    for (let i = 0; i < 5000; i++) {
+      const v = 20 + Math.random()*20;
+      ctx.fillStyle = `rgb(${v},${v*0.7},${v*0.4})`;
+      ctx.fillRect(Math.random()*1024, Math.random()*1024, 2+Math.random()*6, 2+Math.random()*6);
+    }
+    // Grid lines (tectonic grid)
+    ctx.strokeStyle = 'rgba(200,168,75,0.06)'; ctx.lineWidth = 1;
+    for (let i = 0; i < 1024; i += 64) {
+      ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,1024); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(1024,i); ctx.stroke();
+    }
+  });
+}
+
+// ─── SHARED MATERIALS ───────────────────────────────────────────────────────
+const stratTex   = makeStratifiedTexture();
+const topTex     = makeTopTexture();
+const stratTex2  = makeStratifiedTexture(512, 256, ['#3a3050','#504060','#2a2040','#6a5080','#1a1030','#584868','#7a6090']);
+const faultMat   = new THREE.MeshStandardMaterial({ color: 0x1a0f05, roughness: 0.95, metalness: 0 });
+
+// ─── SIMULATION STATE ────────────────────────────────────────────────────────
+let currentMode    = null;
+let currentSub     = 'folding';
+let magnitude      = 0.5;
+let isAnimating    = false;
+let animProgress   = 0;  // 0→1
+let animDir        = 1;
+let animObjects    = [];  // { mesh, update(t, mag) }
+let labelObjects   = [];
+
+const clock = new THREE.Clock();
+
+// ─── SCENE GROUPS ────────────────────────────────────────────────────────────
+let simGroup = new THREE.Group();
+scene.add(simGroup);
+
+// Ground plane
+const groundGeo = new THREE.PlaneGeometry(80, 80, 1, 1);
+const groundMat = new THREE.MeshStandardMaterial({ map: makeGroundTexture(), roughness: 1, metalness: 0 });
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -3;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid helper
+const grid = new THREE.GridHelper(60, 30, 0x2a2010, 0x1a1008);
+grid.position.y = -2.99;
+scene.add(grid);
+
+// ─── BLOCK BUILDER ──────────────────────────────────────────────────────────
+function buildStratBlock(W, H, D, segs = { x: 40, y: 1, z: 40 }) {
+  const geo = new THREE.BoxGeometry(W, H, D, segs.x, segs.y, segs.z);
+  const strat = makeStratifiedTexture();
+  const top   = makeTopTexture();
+  const mats  = [
+    new THREE.MeshStandardMaterial({ map: strat, roughness: 0.9, metalness: 0.02 }),  // +x
+    new THREE.MeshStandardMaterial({ map: strat, roughness: 0.9, metalness: 0.02 }),  // -x
+    new THREE.MeshStandardMaterial({ map: top,   roughness: 0.85, metalness: 0 }),    // +y (top)
+    new THREE.MeshStandardMaterial({ map: strat, roughness: 0.9, metalness: 0.02 }),  // -y
+    new THREE.MeshStandardMaterial({ map: strat, roughness: 0.9, metalness: 0.02 }),  // +z
+    new THREE.MeshStandardMaterial({ map: strat, roughness: 0.9, metalness: 0.02 }),  // -z
+  ];
+  const mesh = new THREE.Mesh(geo, mats);
+  mesh.castShadow    = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+// ─── LABEL HELPER ────────────────────────────────────────────────────────────
+function makeLabel(text, pos, showAt = 0.3) {
+  const el = document.createElement('div');
+  el.className = 'label-2d';
+  el.textContent = text;
+  const obj = new CSS2DObject(el);
+  obj.position.copy(pos);
+  obj._showAt = showAt;
+  labelRenderer.add(obj);
+  labelObjects.push({ obj, showAt });
+  return obj;
+}
+
+// ─── CLEAR SIMULATION ────────────────────────────────────────────────────────
+function clearSim() {
+  while (simGroup.children.length) {
+    const c = simGroup.children[0];
+    if (c.geometry) c.geometry.dispose();
+    if (Array.isArray(c.material)) c.material.forEach(m => m.dispose());
+    else if (c.material) c.material.dispose();
+    simGroup.remove(c);
+  }
+  labelRenderer.removeAll();
+  labelObjects = [];
+  animObjects  = [];
+  animProgress = 0;
+  isAnimating  = false;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  MODE BUILDERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ─── 1. TENSIONAL — Normal Fault ─────────────────────────────────────────────
+function buildTensional() {
+  clearSim();
+  setInfo(
+    'Normal Fault / Graben',
+    'Tensional forces pull crustal blocks apart. The hanging wall slides DOWN relative to the footwall along a fault plane (typically 60°). The down-dropped block forms a GRABEN (Rift Valley); elevated flanks form HORSTS.',
+    [
+      { term: 'Horst',      def: 'Elevated block between normal faults' },
+      { term: 'Graben',     def: 'Down-dropped block — forms Rift Valley' },
+      { term: 'Fault Scarp',def: 'The exposed cliff face along the fault plane' },
+      { term: 'Rift Valley',def: 'Linear depression from crustal extension' }
+    ]
+  );
+  document.getElementById('force-desc').textContent =
+    'Tensional (extensional) forces stretch the crust, thinning it. At ~60° fault angles, the hanging wall drops, creating characteristic rift geometry.';
+
+  // Three blocks: L, center(graben), R
+  const bL = buildStratBlock(5, 4, 8);
+  const bC = buildStratBlock(4, 4, 8);
+  const bR = buildStratBlock(5, 4, 8);
+
+  bL.position.set(-5, 0, 0);
+  bC.position.set( 0, 0, 0);
+  bR.position.set( 5, 0, 0);
+
+  simGroup.add(bL, bC, bR);
+
+  // Fault plane visuals
+  const fpGeo = new THREE.PlaneGeometry(4.5, 5);
+  const fpMat = new THREE.MeshBasicMaterial({ color: 0xff2200, transparent: true, opacity: 0.18, side: THREE.DoubleSide });
+  const fL = new THREE.Mesh(fpGeo, fpMat);
+  fL.position.set(-2.5, 0, 0); fL.rotation.z = THREE.MathUtils.degToRad(60);
+  const fR = new THREE.Mesh(fpGeo, fpMat.clone());
+  fR.position.set(2.5, 0, 0);  fR.rotation.z = THREE.MathUtils.degToRad(-60);
+  simGroup.add(fL, fR);
+
+  // Arrow helpers
+  addArrow(new THREE.Vector3(-6.5, 1, 0), new THREE.Vector3(-1,0,0), 2, 0xe74c3c);
+  addArrow(new THREE.Vector3( 6.5, 1, 0), new THREE.Vector3( 1,0,0), 2, 0xe74c3c);
+
+  const baseL = bL.position.clone();
+  const baseC = bC.position.clone();
+  const baseR = bR.position.clone();
+
+  animObjects = [{
+    update(t, mag) {
+      bL.position.x = baseL.x - t * mag * 1.8;
+      bR.position.x = baseR.x + t * mag * 1.8;
+      bC.position.y = baseC.y - t * mag * 1.4;
+      fL.position.x = bL.position.x + 2.8;
+      fR.position.x = bR.position.x - 2.8;
+
+      // Show labels
+      if (t > 0.35) {
+        showLabel('HORST',       new THREE.Vector3(bL.position.x, 3.5, 0));
+        showLabel('HORST',       new THREE.Vector3(bR.position.x, 3.5, 0));
+        showLabel('GRABEN / RIFT VALLEY', new THREE.Vector3(0, bC.position.y + 3, 0));
+        showLabel('FAULT SCARP', new THREE.Vector3(-2.5, bC.position.y + 1.5, 0));
+      }
+    }
+  }];
+
+  makeLabel('HORST', new THREE.Vector3(-5, 3.5, 0), 0.35);
+  makeLabel('HORST', new THREE.Vector3( 5, 3.5, 0), 0.35);
+  makeLabel('GRABEN / RIFT VALLEY', new THREE.Vector3(0, 3, 0), 0.35);
+  makeLabel('FAULT SCARP', new THREE.Vector3(-2.5, 2, 0), 0.4);
+}
+
+// ─── 2a. COMPRESSION — Folding ───────────────────────────────────────────────
+function buildFolding() {
+  clearSim();
+  setInfo(
+    'Folding — Anticline & Syncline',
+    'Compressional forces buckle rock strata into wave-like folds. Upward arches are ANTICLINES (form mountains); downward troughs are SYNCLINES (form valleys). The axis of the fold is the hinge line.',
+    [
+      { term: 'Anticline', def: 'Upward arch — oldest rocks at core' },
+      { term: 'Syncline',  def: 'Downward trough — youngest rocks at core' },
+      { term: 'Axial Plane',def: 'Bisecting plane through the fold axis' },
+      { term: 'Limb',      def: 'Sloping flank of a fold' }
+    ]
+  );
+  document.getElementById('force-desc').textContent =
+    'Horizontal compressional stress causes ductile rock strata to buckle, producing sinusoidal folds. Anticlines can trap oil; synclines collect groundwater.';
+
+  const W = 14, D = 6, segX = 80, segZ = 8;
+  const geo = new THREE.PlaneGeometry(W, D, segX, segZ);
+  geo.rotateX(-Math.PI / 2);
+
+  // Apply strat texture on top + sides via multi-material box instead
+  const mat = new THREE.MeshStandardMaterial({
+    map: makeCanvas(512, 256, (ctx, w, h) => {
+      // Stratified side view
+      const colors = ['#5c3d1e','#7a5230','#4a3018','#8c6840','#3a2510','#6a4828','#9a7850'];
+      for (let i = 0; i < 16; i++) {
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.globalAlpha = 0.85;
+        ctx.fillRect(0, (i/16)*h, w, h/14);
+      }
+      ctx.globalAlpha = 1;
+    }),
+    roughness: 0.9, metalness: 0, side: THREE.DoubleSide
+  });
+
+  // Thick slab using multiple stacked planes
+  const slabGroup = new THREE.Group();
+  const nLayers = 8;
+  for (let li = 0; li < nLayers; li++) {
+    const lGeo = new THREE.PlaneGeometry(W, D, segX, segZ);
+    lGeo.rotateX(-Math.PI / 2);
+    const layerColors = ['#5c3d1e','#7a5230','#4a3018','#8c6840','#3a2510','#6a4828','#9a7850','#b09070'];
+    const lMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(layerColors[li % layerColors.length]),
+      roughness: 0.9, metalness: 0
+    });
+    const lMesh = new THREE.Mesh(lGeo, lMat);
+    lMesh.position.y = li * 0.22 - (nLayers * 0.22) / 2;
+    lMesh.castShadow    = true;
+    lMesh.receiveShadow = true;
+    slabGroup.add(lMesh);
+
+    // Store original positions
+    lMesh.userData.origPos = Array.from(lGeo.attributes.position.array);
+    lMesh.userData.layerIdx = li;
+  }
+  simGroup.add(slabGroup);
+
+  addArrow(new THREE.Vector3(-9, 0, 0), new THREE.Vector3(1,0,0), 2.5, 0x3498db);
+  addArrow(new THREE.Vector3( 9, 0, 0), new THREE.Vector3(-1,0,0), 2.5, 0x3498db);
+
+  const antiL = makeLabel('ANTICLINE', new THREE.Vector3(-4.5, 6, 0), 0.3);
+  const synL  = makeLabel('SYNCLINE',  new THREE.Vector3(0, -2, 0), 0.3);
+  const antiL2= makeLabel('ANTICLINE', new THREE.Vector3(4.5, 6, 0), 0.3);
+  const limbL = makeLabel('LIMB', new THREE.Vector3(-2.2, 2, 0), 0.5);
+
+  animObjects = [{
+    update(t, mag) {
+      slabGroup.children.forEach((lMesh, li) => {
+        const geo  = lMesh.geometry;
+        const orig = lMesh.userData.origPos;
+        const pos  = geo.attributes.position;
+        const layerPhase = (li / nLayers) * 0.2;
+        const amp = t * mag * 3.5;
+
+        for (let i = 0; i < pos.count; i++) {
+          const x = orig[i * 3];
+          // 2.5 folds across width
+          const wave = Math.sin((x / W) * Math.PI * 2.5) * amp;
+          pos.setY(i, orig[i*3+1] + wave - layerPhase * amp);
+        }
+        pos.needsUpdate = true;
+        geo.computeVertexNormals();
+      });
+    }
+  }];
+}
+
+// ─── 2b. COMPRESSION — Reverse / Thrust Fault ───────────────────────────────
+function buildReverseFault() {
+  clearSim();
+  setInfo(
+    'Reverse / Thrust Fault',
+    'Under extreme compression, the hanging wall is forced UP and OVER the footwall along a low-angle thrust plane (< 45°). This creates mountain ranges and nappes. A fault with a dip < 30° is called a THRUST FAULT.',
+    [
+      { term: 'Hanging Wall', def: 'Block ABOVE the fault plane — moves up' },
+      { term: 'Footwall',     def: 'Block BELOW the fault plane — stationary' },
+      { term: 'Thrust Fault', def: 'Reverse fault with dip < 30°' },
+      { term: 'Nappe',        def: 'Large recumbent fold or thrust sheet' }
+    ]
+  );
+  document.getElementById('force-desc').textContent =
+    'Compressional forces exceeding rock strength cause brittle failure along a fault plane. The hanging wall rides up, building mountain belts like the Himalayas and Alps.';
+
+  const bFoot = buildStratBlock(7, 3.5, 8);
+  const bHang = buildStratBlock(7, 3.5, 8);
+
+  bFoot.position.set(-2, 0, 0);
+  bHang.position.set( 2, 0, 0);
+  simGroup.add(bFoot, bHang);
+
+  // Fault plane
+  const fpGeo = new THREE.PlaneGeometry(5, 5);
+  const fpMat = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.25, side: THREE.DoubleSide });
+  const fp = new THREE.Mesh(fpGeo, fpMat);
+  fp.position.set(0, 0, 0);
+  fp.rotation.z = THREE.MathUtils.degToRad(-30);
+  simGroup.add(fp);
+
+  addArrow(new THREE.Vector3(-9, 1, 0), new THREE.Vector3(1,0,0),  2.5, 0x3498db);
+  addArrow(new THREE.Vector3( 9, 1, 0), new THREE.Vector3(-1,0,0), 2.5, 0x3498db);
+
+  const baseHang = bHang.position.clone();
+  makeLabel('HANGING WALL', new THREE.Vector3(2, 5, 0), 0.3);
+  makeLabel('FOOTWALL', new THREE.Vector3(-2, -0.5, 0), 0.3);
+  makeLabel('FAULT SCARP', new THREE.Vector3(0, 3.5, 0), 0.5);
+  makeLabel('REVERSE / THRUST FAULT', new THREE.Vector3(0, -3, 0), 0.2);
+
+  animObjects = [{
+    update(t, mag) {
+      bHang.position.x = baseHang.x - t * mag * 1.5;
+      bHang.position.y = baseHang.y + t * mag * 2.2;
+      bHang.rotation.z = -t * mag * 0.12;
+    }
+  }];
+}
+
+// ─── 3. SHEAR — Transform Fault ──────────────────────────────────────────────
+function buildShear() {
+  clearSim();
+  setInfo(
+    'Transform / Strike-Slip Fault',
+    'Shear forces cause crustal blocks to slide HORIZONTALLY past each other along a vertical fault plane. No block is raised or lowered. These lateral faults are called TRANSFORM or STRIKE-SLIP faults — e.g. the San Andreas Fault, California.',
+    [
+      { term: 'Dextral',     def: 'Right-lateral — opposite block moves right' },
+      { term: 'Sinistral',   def: 'Left-lateral — opposite block moves left' },
+      { term: 'Fault Zone',  def: 'Crushed rock (gouge) along fault plane' },
+      { term: 'Offset Streams', def: 'Rivers displaced by lateral movement' }
+    ]
+  );
+  document.getElementById('force-desc').textContent =
+    'Shear forces act parallel to the Earth\'s surface. Transform faults offset mid-ocean ridges and are sites of frequent shallow earthquakes.';
+
+  const bN = buildStratBlock(8, 3.5, 5);
+  const bS = buildStratBlock(8, 3.5, 5);
+
+  bN.position.set(0,  0,  3.5);
+  bS.position.set(0,  0, -3.5);
+  simGroup.add(bN, bS);
+
+  // Fault plane (vertical)
+  const fpGeo = new THREE.PlaneGeometry(10, 4);
+  const fpMat = new THREE.MeshBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.18, side: THREE.DoubleSide });
+  const fp = new THREE.Mesh(fpGeo, fpMat);
+  fp.rotation.y = Math.PI / 2;
+  simGroup.add(fp);
+
+  // Shear arrows (horizontal)
+  addArrow(new THREE.Vector3(-5.5, 1,  3.5), new THREE.Vector3(-1,0,0), 2, 0x2ecc71);
+  addArrow(new THREE.Vector3( 5.5, 1, -3.5), new THREE.Vector3( 1,0,0), 2, 0x2ecc71);
+
+  // Reference marker (offset stream)
+  const streamGeo = new THREE.CylinderGeometry(0.08, 0.08, 10, 8);
+  const streamMat = new THREE.MeshBasicMaterial({ color: 0x4499ff, transparent: true, opacity: 0.7 });
+  const stream = new THREE.Mesh(streamGeo, streamMat);
+  stream.rotation.z = Math.PI / 2;
+  stream.position.set(0, 0.3, 0);
+  simGroup.add(stream);
+
+  const baseN = bN.position.clone();
+  const baseS = bS.position.clone();
+
+  makeLabel('DEXTRAL STRIKE-SLIP FAULT', new THREE.Vector3(0, 4, 0), 0.2);
+  makeLabel('FAULT SCARP', new THREE.Vector3(0, 2.5, 0), 0.4);
+  makeLabel('OFFSET STREAM', new THREE.Vector3(0, 1.5, -5), 0.5);
+
+  animObjects = [{
+    update(t, mag) {
+      bN.position.x = baseN.x - t * mag * 2.5;
+      bS.position.x = baseS.x + t * mag * 2.5;
+    }
+  }];
+}
+
+// ─── 4. UPWARPING — Dome ─────────────────────────────────────────────────────
+function buildUpwarping() {
+  clearSim();
+  setInfo(
+    'Upwarping — Tectonic Dome',
+    'Vertical isostatic forces push crustal material upward in a broad, symmetrical dome. Caused by magmatic intrusions (batholiths), mantle plumes or post-glacial rebound. Radial drainage patterns develop on the dome surface.',
+    [
+      { term: 'Batholith',   def: 'Large igneous intrusion causing doming' },
+      { term: 'Monadnock',   def: 'Isolated hill on an eroded dome' },
+      { term: 'Isostasy',    def: 'Gravitational equilibrium of the crust' },
+      { term: 'Mantle Plume',def: 'Upwelling column of hot mantle rock' }
+    ]
+  );
+  document.getElementById('force-desc').textContent =
+    'Upwarping is a broad, gentle uplift of the crust above a heat source. The Ahaggar and Tibesti massifs of Africa are classic upwarp domes.';
+
+  buildWarpMesh('up');
+}
+
+// ─── 5. DOWNWARPING — Basin ───────────────────────────────────────────────────
+function buildDownwarping() {
+  clearSim();
+  setInfo(
+    'Downwarping — Sedimentary Basin',
+    'Vertical subsidence creates broad basins (geosynclines) that collect sediment. Caused by crustal loading, cooling of oceanic lithosphere, or mantle downwelling. Major oil and gas reserves exist in downwarped basins.',
+    [
+      { term: 'Geosyncline', def: 'Large, elongated crustal depression' },
+      { term: 'Subsidence',  def: 'Gradual sinking of the crust' },
+      { term: 'Isopach',     def: 'Line of equal sediment thickness' },
+      { term: 'Foreland Basin', def: 'Basin adjacent to a mountain belt' }
+    ]
+  );
+  document.getElementById('force-desc').textContent =
+    'Downwarping produces shallow inland seas and later, thick sedimentary sequences. The Saharan, Permian, and Williston basins are large-scale examples.';
+
+  buildWarpMesh('down');
+}
+
+function buildWarpMesh(direction) {
+  const W = 16, D = 16, segs = 60;
+  const geo = new THREE.PlaneGeometry(W, D, segs, segs);
+  geo.rotateX(-Math.PI / 2);
+
+  // Multi-layer strat appearance
+  const mat = new THREE.MeshStandardMaterial({
+    map: makeCanvas(512,512, (ctx, w, h) => {
+      const g = ctx.createLinearGradient(0,0,0,h);
+      g.addColorStop(0,'#4a7a3a'); g.addColorStop(0.05,'#5c8c4a');
+      g.addColorStop(0.1,'#7a5230'); g.addColorStop(0.25,'#5c3d1e');
+      g.addColorStop(0.5,'#4a3018'); g.addColorStop(0.75,'#3a2510');
+      g.addColorStop(1,'#2a1808');
+      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+      for (let i = 0; i < 12; i++) {
+        const y = (i/12)*h;
+        ctx.fillStyle = ['#6a4828','#8c6840','#4a3018','#7a5230','#5c3d1e','#9a7850'][i%6];
+        ctx.globalAlpha = 0.5;
+        ctx.fillRect(0, y, w, h/14);
+      }
+      ctx.globalAlpha = 1;
+    }),
+    roughness: 0.9, metalness: 0, side: THREE.DoubleSide,
+    wireframe: false
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true; mesh.receiveShadow = true;
+  simGroup.add(mesh);
+
+  // Vertical arrow
+  const arrowDir = direction === 'up' ? new THREE.Vector3(0,1,0) : new THREE.Vector3(0,-1,0);
+  addArrow(new THREE.Vector3(0, direction==='up' ? -1 : 2, 0), arrowDir, 2.5, 0x9b59b6);
+
+  const origPos = Array.from(geo.attributes.position.array);
+
+  const sigmaX = direction === 'up' ? 4.5 : 5.5;
+  const sigmaZ = direction === 'up' ? 4.5 : 5.5;
+
+  if (direction === 'up') {
+    makeLabel('TECTONIC DOME', new THREE.Vector3(0, 5, 0), 0.3);
+    makeLabel('RADIAL DRAINAGE', new THREE.Vector3(5, 3, 5), 0.6);
+    makeLabel('BATHOLITH (BELOW)', new THREE.Vector3(0, -1.5, 0), 0.2);
+  } else {
+    makeLabel('SEDIMENTARY BASIN', new THREE.Vector3(0, -4, 0), 0.3);
+    makeLabel('GEOSYNCLINE', new THREE.Vector3(0, 1, 0), 0.4);
+    makeLabel('SUBSIDENCE ZONE', new THREE.Vector3(5, 0, 5), 0.5);
+  }
+
+  animObjects = [{
+    update(t, mag) {
+      const pos = geo.attributes.position;
+      const maxH = t * mag * (direction === 'up' ? 4.5 : -4);
+      for (let i = 0; i < pos.count; i++) {
+        const ox = origPos[i*3];
+        const oz = origPos[i*3+2];
+        const gauss = Math.exp(-(ox*ox/(2*sigmaX*sigmaX) + oz*oz/(2*sigmaZ*sigmaZ)));
+        pos.setY(i, origPos[i*3+1] + maxH * gauss);
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+    }
+  }];
+}
+
+// ─── ARROW HELPER ────────────────────────────────────────────────────────────
+function addArrow(origin, dir, length, color) {
+  const arrow = new THREE.ArrowHelper(dir.normalize(), origin, length, color, length * 0.25, length * 0.14);
+  simGroup.add(arrow);
+}
+
+// ─── LABEL SHOW HELPER ───────────────────────────────────────────────────────
+const _labelShown = new Set();
+function showLabel(text, pos) {
+  if (_labelShown.has(text)) {
+    // Update position
+    labelObjects.forEach(lo => {
+      if (lo.obj.element.textContent === text) lo.obj.position.copy(pos);
+    });
+    return;
+  }
+  _labelShown.add(text);
+  const el = document.createElement('div');
+  el.className = 'label-2d visible';
+  el.textContent = text;
+  const obj = new CSS2DObject(el);
+  obj.position.copy(pos);
+  labelRenderer.add(obj);
+  labelObjects.push({ obj, showAt: 0 });
+}
+
+// ─── INFO PANEL ──────────────────────────────────────────────────────────────
+function setInfo(title, desc, vocab) {
+  document.getElementById('info-title').textContent = title;
+  document.getElementById('info-desc').textContent  = desc;
+  const vl = document.getElementById('vocab-list');
+  vl.innerHTML = '';
+  vocab.forEach(v => {
+    const item = document.createElement('div');
+    item.className = 'vocab-item';
+    item.innerHTML = `<div class="term">${v.term}</div><div class="def">${v.def}</div>`;
+    vl.appendChild(item);
+  });
+}
+
+// ── UI EVENT WIRING ──────────────────────────────────────────────────────────
+document.querySelectorAll('.force-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.force-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+    _labelShown.clear();
+
+    const csub = document.getElementById('compress-sub');
+    csub.style.display = currentMode === 'compression' ? 'block' : 'none';
+
+    document.getElementById('active-mode-label').textContent =
+      btn.querySelector('div > div:first-child').textContent.toUpperCase();
+
+    // Build scene
+    buildScene();
+    animProgress = 0; isAnimating = false;
+  });
+});
+
+document.querySelectorAll('.sub-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSub = btn.dataset.sub;
+    if (currentMode === 'compression') { buildScene(); animProgress = 0; isAnimating = false; }
+  });
+});
+
+document.getElementById('magnitude').addEventListener('input', function() {
+  magnitude = this.value / 100;
+  document.getElementById('mag-val').textContent = this.value + '%';
+  if (isAnimating || animProgress > 0) {
+    animObjects.forEach(ao => ao.update(animProgress, magnitude));
+    labelObjects.forEach(lo => {
+      if (lo.obj.element) lo.obj.element.classList.toggle('visible', animProgress >= lo.showAt);
+    });
+  }
+});
+
+document.getElementById('btn-animate').addEventListener('click', () => {
+  if (!currentMode) return;
+  isAnimating = true;
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (currentMode) buildScene();
+  animProgress = 0; isAnimating = false;
+  labelObjects.forEach(lo => { if (lo.obj.element) lo.obj.element.classList.remove('visible'); });
+});
+
+function buildScene() {
+  _labelShown.clear();
+  switch (currentMode) {
+    case 'tensional':    buildTensional();   break;
+    case 'compression':
+      if (currentSub === 'folding') buildFolding();
+      else buildReverseFault();
+      break;
+    case 'shear':        buildShear();       break;
+    case 'upwarping':    buildUpwarping();   break;
+    case 'downwarping':  buildDownwarping(); break;
+  }
+}
+
+// ── ANIMATION LOOP ───────────────────────────────────────────────────────────
+const ANIM_SPEED = 0.004;
+const MAX_T = 1;
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (isAnimating && animProgress < MAX_T) {
+    animProgress = Math.min(MAX_T, animProgress + ANIM_SPEED);
+    animObjects.forEach(ao => ao.update(animProgress, magnitude));
+    labelObjects.forEach(lo => {
+      if (lo.obj.element) lo.obj.element.classList.toggle('visible', animProgress >= lo.showAt);
+    });
+    if (animProgress >= MAX_T) isAnimating = false;
+  }
+
+  labelRenderer.render(scene, camera);
+  renderer.render(scene, camera);
+}
+
+// ── RESIZE ───────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── BOOT ─────────────────────────────────────────────────────────────────────
+// Load tensional by default
+currentMode = 'tensional';
+document.querySelector('[data-mode="tensional"]').classList.add('active');
+document.getElementById('active-mode-label').textContent = 'TENSIONAL FORCES';
+buildTensional();
+animate();
+</script>
+</body>
+</html>
